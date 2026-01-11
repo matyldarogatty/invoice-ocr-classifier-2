@@ -1,0 +1,892 @@
+filename,text,label
+FV1_00000.png,LINAREM CISOWSKI,0
+FV1_00001.png,Miejsce wystawienia:,6
+FV1_00002.png,SPOLKA KOMANDYTOWO-AKCYJNA,0
+FV1_00003.png,Krakow,6
+FV1_00004.png,"Pollanki 22, 30-740 Krakow",6
+FV1_00005.png,NIP: 679 323 49 99,1
+FV1_00006.png,Data zakonczenia dostawy/uslug,6
+FV1_00007.png,BDO: 000565321,6
+FV1_00008.png,2025-11-08,6
+FV1_00009.png,Tel.: +48 660 579 964,6
+FV1_00010.png,e-mail: biuro@linarem.pl,6
+FV1_00011.png,Data wystawienia:,6
+FV1_00012.png,Pekao S.A. 91 1240 4533 1111 0011 1285 1182,6
+FV1_00013.png,2025-11-08,6
+FV1_00014.png,Sprzedawca:,6
+FV1_00015.png,Nabywca:,6
+FV1_00016.png,LINAREM CISOWSKI,0
+FV1_00017.png,Matylda Rogatty,2
+FV1_00018.png,SPOLKA KOMANDYTOWO-AKCYJNA,0
+FV1_00019.png,Pollanki 22,6
+FV1_00020.png,Palmowa 39,6
+FV1_00021.png,30-740 Krakow,6
+FV1_00022.png,85-485 Bydgoszcz,6
+FV1_00023.png,NIP: 6793234999,1
+FV1_00024.png,NIP:,3
+FV1_00025.png,Faktura VAT 444319/MG1/11/2025 oryginal,5
+FV1_00026.png,1154240,6
+FV1_00027.png,Lp,6
+FV1_00028.png,Nazwa,6
+FV1_00029.png,Opis,6
+FV1_00030.png,Kod llosc j.m. Cena VAT Wartosc netto Kwota VAT Wartosc brutto,6
+FV1_00031.png,CN/PK,6
+FV1_00032.png,jednostkowa [%],6
+FV1_00033.png,WiU,6
+FV1_00034.png,brutto,6
+FV1_00035.png,1 Pulapka na muszki owocowki,6
+FV1_00036.png,"1,000 szt.",6
+FV1_00037.png,"24,99 23",6
+FV1_00038.png,"20,32",6
+FV1_00039.png,"4,67",6
+FV1_00040.png,"24,99",6
+FV1_00041.png,NO PEST,6
+FV1_00042.png,2 Koszt wysylki kurierskiej.,6
+FV1_00043.png,"1,000 szt.",6
+FV1_00044.png,"10,95 23",6
+FV1_00045.png,"8,90",6
+FV1_00046.png,"2,05",6
+FV1_00047.png,"10,95",6
+FV1_00048.png,wedlug stawki VAT,6
+FV1_00049.png,wartosc netto kwota VAT wartosc brutto,6
+FV1_00050.png,Podstawowy podatek VAT 23%,6
+FV1_00051.png,"29,22",6
+FV1_00052.png,"6,72",6
+FV1_00053.png,"35,94",4
+FV1_00054.png,Razem:,6
+FV1_00055.png,"29,22",6
+FV1_00056.png,"6,72",6
+FV1_00057.png,"35,94",4
+FV1_00058.png,Razem do zaplaty:,6
+FV1_00059.png,"35,94",4
+FV1_00060.png,Stownie: trzydziesci piec PLN 94/100,6
+FV1_00061.png,"Zaplacono przelewem: 35,94",4
+FV1_00062.png,Uwagi do dokumentu: 11154240 allegro Client:37394007,6
+FV1_00063.png,Wystawit(a):,6
+FV1_00064.png,Odebral(a):,6
+FV1_00065.png,Mateusz. Mazur,6
+FV1_00066.png,Podpis osoby upowaznionej do wystawienia faktury VAT,6
+FV1_00067.png,Podpis osoby upowaznionej do odbioru faktury VAT,6
+FV10_00068.png,kawy,6
+FV10_00069.png,Faktura VAT,6
+FV10_00070.png,Data wystawienia:,6
+FV10_00071.png,2025-08-08,6
+FV10_00072.png,Numer faktury,6
+FV10_00073.png,FV-IKA/10670/PL/2508,5
+FV10_00074.png,4534975,6
+FV10_00075.png,Sprzedawca,6
+FV10_00076.png,Nabywca,6
+FV10_00077.png,BsCaffe Grzegorz Bienko,0
+FV10_00078.png,Matylda Rogatty,2
+FV10_00079.png,ul. Swierkowa 9B,6
+FV10_00080.png,Dzielnicowa 8/5,6
+FV10_00081.png,37-464 Stalowa Wola,6
+FV10_00082.png,54-614 Wroclaw,6
+FV10_00083.png,NIP: 8652432155,1
+FV10_00084.png,BDO: 000124964,6
+FV10_00085.png,"Forma platnosci: Zaplacono Allegro Finanse (58,74 zi)",6
+FV10_00086.png,Wartosc,6
+FV10_00087.png,Wartosc,6
+FV10_00088.png,Nazwa towarul lub uslugi,6
+FV10_00089.png,Cena brutto PKWIU,6
+FV10_00090.png,llosc,6
+FV10_00091.png,Stawka VAT Kwota VAT,6
+FV10_00092.png,netto,6
+FV10_00093.png,brutto,6
+FV10_00094.png,Filtry papierowe do dripa Hario,6
+FV10_00095.png,1,6
+FV10_00096.png,"16,98 zt",6
+FV10_00097.png,1 szt.,6
+FV10_00098.png,"13,80 zt",6
+FV10_00099.png,23%,6
+FV10_00100.png,"3,18 zt",6
+FV10_00101.png,"16,98 zt",6
+FV10_00102.png,V60-02 100szt,6
+FV10_00103.png,Filtry do kawy Finum Cold Brew +,6
+FV10_00104.png,2 Click 60 szt.,6
+FV10_00105.png,"19,90 zt",6
+FV10_00106.png,1 szt.,6
+FV10_00107.png,"16,18 zt",6
+FV10_00108.png,23%,6
+FV10_00109.png,"3,72 zt",6
+FV10_00110.png,"19,90 zt",6
+FV10_00111.png,Kawa ziarnista Kimbo Aroma Gold,6
+FV10_00112.png,3,6
+FV10_00113.png,"21,86 zt",6
+FV10_00114.png,1 szt.,6
+FV10_00115.png,"17,77 zt",6
+FV10_00116.png,23%,6
+FV10_00117.png,"4,09 zt",6
+FV10_00118.png,"21,86 zt",6
+FV10_00119.png,250g,6
+FV10_00120.png,"47,75 zt",6
+FV10_00121.png,"10,99 zt 58,74 zt",6
+FV10_00122.png,Suma:,6
+FV10_00123.png,"47,75 zt",6
+FV10_00124.png,23%,6
+FV10_00125.png,"10,99 zt",6
+FV10_00126.png,"58,74 zt",4
+FV10_00127.png,"Do zaplaty : 58,74 zt",4
+FV10_00128.png,"Zaplacono: 58,74 zt",4
+FV10_00129.png,"Pozostalo do zaplaty: 0,00 zt",6
+FV10_00130.png,W przypadku sprzedazy towaru W obrocie miedzy przedsiebiorcami na podstawie art. 55851k.c. strony wylaczaja odpowiedzialnosé sprzedajacego z tytulu rekojmiz za wady fizycznei prawne,6
+FV10_00131.png,"rzeczy, w szczegolnosci ustalaja iz nie ponosi on zadnej odpowiedzialnosci takze za",6
+FV10_00132.png,wady ukryte przedmiotu: sprzedazy.,6
+FV10_00133.png,Dokument nr FV-IKA/10670/PL/2508 strona 1,6
+FV10_00134.png,Dokument wygenerowany przez IdoSell,6
+FV12_00177.png,UNIWERSYTET,6
+FV12_00178.png,WSB MERITO,6
+FV12_00179.png,WROCLAW,6
+FV12_00180.png,Uniwersytet WSB Merito we Wroclawiu,0
+FV12_00181.png,"Wroclaw, dnia 07.07.2025 r.",6
+FV12_00182.png,ul. Fabryczna 29-31,6
+FV12_00183.png,53-609 Wroclaw,6
+FV12_00184.png,Oryginal / Kopia,6
+FV12_00185.png,Tel.: (71) 359. 46 46,6
+FV12_00186.png,NIP: 894-24-50-411,1
+FV12_00187.png,Faktura VAT nr FV-2025/07/0004,5
+FV12_00188.png,Nabywca:,6
+FV12_00189.png,Matylda Rogatty,2
+FV12_00190.png,Dzielnicowa 8/5,6
+FV12_00191.png,54-614 Wroclaw,6
+FV12_00192.png,Polska,6
+FV12_00193.png,NIP:,3
+FV12_00194.png,Data sprzedazy: 03.07.2025 r.,6
+FV12_00195.png,Sposob platnosci: Przelew,6
+FV12_00196.png,Cena Podatek Kwota Wartosc,6
+FV12_00197.png,Lp,6
+FV12_00198.png,Opis,6
+FV12_00199.png,Jm Ilosc netto,6
+FV12_00200.png,%,6
+FV12_00201.png,VAT brutto,6
+FV12_00202.png,"1. Rok akademicki 2024/2025, studia II stopnia - czesne",6
+FV12_00203.png,rata 1,6
+FV12_00204.png,"918,00 zl ZW.",4
+FV12_00205.png,"0,00 zl 918,00 zl",6
+FV12_00206.png,"Rata 10, Pani Matylda Rogatty",6
+FV12_00207.png,zW. na podst.art.43 ust. 1 pkt 26 lit.b. ustawy 0 pod.od tow. i usl.,6
+FV12_00208.png,Rozliczenie podatku VAT,6
+FV12_00209.png,Stawka % Wartosé netto Kwota VAT Wartosc brutto,6
+FV12_00210.png,ZW.,6
+FV12_00211.png,"918,00 zl",4
+FV12_00212.png,"0,00 zl",6
+FV12_00213.png,"918,00 zl",4
+FV12_00214.png,0,6
+FV12_00215.png,"0,00 zl",6
+FV12_00216.png,"0,00 zl",6
+FV12_00217.png,"0,00 zl",6
+FV12_00218.png,5,6
+FV12_00219.png,"0,00 zl",6
+FV12_00220.png,"0,00 zl",6
+FV12_00221.png,"0,00 zl",6
+FV12_00222.png,8,6
+FV12_00223.png,"0,00 zl",6
+FV12_00224.png,"0,00 zl",6
+FV12_00225.png,"0,00 zl",6
+FV12_00226.png,23,6
+FV12_00227.png,"0,00 zl",6
+FV12_00228.png,"0,00 zl",6
+FV12_00229.png,"0,00 zl",6
+FV12_00230.png,Razem:,6
+FV12_00231.png,"918,00 zl",4
+FV12_00232.png,"0,00 zl",6
+FV12_00233.png,"918,00 zl",4
+FV12_00234.png,"Razem do zaplaty 918,00 zl",4
+FV12_00235.png,Slownie: dziewiecset osiemnascie zl. zero gr.,6
+FV12_00236.png,Zaplacono przelewem,6
+FV12_00237.png,Nr konta:,6
+FV12_00238.png,26 1600 1462 1085 8203 6000 0040,6
+FV12_00239.png,BNPWL Ww II stopien,6
+FV12_00240.png,Uwagi:,6
+FV12_00241.png,Zaplacono przelewem 03.07.2025,6
+FV12_00242.png,podpis osoby uprawnionej,6
+FV12_00243.png,podpis wystawcy,6
+FV12_00244.png,1/1,6
+FV13_00245.png,PLANETA,6
+FV13_00246.png,Wystawiono dnia,6
+FV13_00247.png,2025-03-24,6
+FV13_00248.png,Data operacji:,6
+FV13_00249.png,2025-03-24,6
+FV13_00250.png,AGD,6
+FV13_00251.png,Sposob zaplaty:,6
+FV13_00252.png,Przelew,6
+FV13_00253.png,Nabywca:,6
+FV13_00254.png,Sprzedawca:,6
+FV13_00255.png,Matylda Rogatty,2
+FV13_00256.png,CSVK: SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA,0
+FV13_00257.png,Dzielnicowa 8/5,6
+FV13_00258.png,ul. Jana Zamoyskiego 81/11,6
+FV13_00259.png,54-614 Wroclaw,6
+FV13_00260.png,30-519 Krakow,6
+FV13_00261.png,NIP: PL6762518282,1
+FV13_00262.png,BDO:000104590,6
+FV13_00263.png,Faktura nr FV/058100/03/25/PLA,5
+FV13_00264.png,POZYCJE FAKTURY,6
+FV13_00265.png,Lp. Nazwa towarul lub uslugi,6
+FV13_00266.png,llosc Jedn. jedn. brutto Cena Wartosc brutto Stawka VAT,6
+FV13_00267.png,1 Oryginalny filtr do wody Dafi Unimax do dzbaneki filtrujacy Dafi 5 sztuk,6
+FV13_00268.png,1 szt,6
+FV13_00269.png,"49,89 PLN",4
+FV13_00270.png,"49,89 PLN",4
+FV13_00271.png,23%,6
+FV13_00272.png,PODSUMOWANIE,6
+FV13_00273.png,Stawka VAT,6
+FV13_00274.png,Netto,6
+FV13_00275.png,Kwota VAT,6
+FV13_00276.png,Brutto,6
+FV13_00277.png,23%,6
+FV13_00278.png,"40,56 PLN",6
+FV13_00279.png,"9,33 PLN",6
+FV13_00280.png,"49,89 PLN",4
+FV13_00281.png,Suma:,6
+FV13_00282.png,"40,56 PLN",6
+FV13_00283.png,"9,33 PLN",6
+FV13_00284.png,"49,89 PLN",4
+FV13_00285.png,Zaplacono:,6
+FV13_00286.png,"49,89 PLN",4
+FV13_00287.png,Pozostalo do zaplaty:,6
+FV13_00288.png,"0,00 PLN",6
+FV13_00289.png,Slownie:,6
+FV13_00290.png,czterdziesci dziewiec zt 89/100,6
+FV13_00291.png,Uwagi:,6
+FV13_00292.png,Faktura bez podpisu odbiorcy,6
+FV13_00293.png,Osoba upowazniona do wystawienia faktury VAT:,6
+FV13_00294.png,planetaAGD.pl,6
+FV13_00295.png,PLANETA,6
+FV13_00296.png,AGD,6
+FV13_00297.png,"O Soneta 2024, enova365: 2412.1.1, sn: 64100007",6
+FV14_00298.png,allegro,6
+FV14_00299.png,Faktura VAT SM25-2207614854,5
+FV14_00300.png,Data sprzedazy,6
+FV14_00301.png,2025-12-05,6
+FV14_00302.png,Data wystawienia,6
+FV14_00303.png,2025-12-05,6
+FV14_00304.png,Sprzedawca,6
+FV14_00305.png,Allegro sp. Z 0.0.,0
+FV14_00306.png,ul. Wierzbiecice 1B,6
+FV14_00307.png,61-569 Poznan,6
+FV14_00308.png,Polska,6
+FV14_00309.png,NIP: PL5252674798,1
+FV14_00310.png,Nabywca,6
+FV14_00311.png,Matylda Rogatty,2
+FV14_00312.png,Palmowa 39,6
+FV14_00313.png,85-485 Bydgoszcz,6
+FV14_00314.png,Polska,6
+FV14_00315.png,NIP:-,3
+FV14_00316.png,Nazwa,6
+FV14_00317.png,llosc Jednostka Cena netto Wartosc netto Stawka VAT,6
+FV14_00318.png,VAT,6
+FV14_00319.png,Brutto,6
+FV14_00320.png,Usluga Allegro Smart! 12 miesiecy,6
+FV14_00321.png,1,6
+FV14_00322.png,"szt. 32,44",6
+FV14_00323.png,"32,44",6
+FV14_00324.png,23%,6
+FV14_00325.png,"7,46",6
+FV14_00326.png,cena promocyjna,6
+FV14_00327.png,"39,90",4
+FV14_00328.png,Stawka VAT,6
+FV14_00329.png,Netto,6
+FV14_00330.png,VAT,6
+FV14_00331.png,Brutto,6
+FV14_00332.png,23%,6
+FV14_00333.png,"32,44",6
+FV14_00334.png,"7,46",6
+FV14_00335.png,"39,90",4
+FV14_00336.png,RAZEM,6
+FV14_00337.png,"32,44",6
+FV14_00338.png,"7,46",6
+FV14_00339.png,"39,90",4
+FV14_00340.png,Slownie,6
+FV14_00341.png,Trzydziesci dziewiec 90/100 PLN,6
+FV14_00342.png,Forma platnosci,6
+FV14_00343.png,Zaplacono Online,6
+FV14_00344.png,Okres rozliczeniowy od 2025-12-08 do 2026-12-08.,6
+FV14_00345.png,Strona 1/1,6
+FV14_00346.png,"Numer BDO: 0000172131 W rejestrze podmiotow wprowadzajacych produkty, produkty W opakowaniach gospodarujacych odpadami.",6
+FV15_00347.png,Sprzedawca,6
+FV15_00348.png,Faktura VAT,6
+FV15_00349.png,Blisspoint.space sp. Z 0.0.,0
+FV15_00350.png,Okretowa 19A,6
+FV15_00351.png,nr FS/020106/03/2025/E,5
+FV15_00352.png,01-309 Warszawa,6
+FV15_00353.png,NIP: PL5223146298,1
+FV15_00354.png,Numer rejestrowy BDO: 000416205,6
+FV15_00355.png,Data wystawienia:,6
+FV15_00356.png,07.03.2025,6
+FV15_00357.png,Data dostawy wykonania uslugi:,6
+FV15_00358.png,07.03.2025,6
+FV15_00359.png,Strona:,6
+FV15_00360.png,1/1,6
+FV15_00361.png,Bank: mBank S.A. Nr rachunku: 31 1140 1977 0000 4867 0300 1006,6
+FV15_00362.png,Nabywca,6
+FV15_00363.png,Matylda Rogatty,2
+FV15_00364.png,Palmowa 39,6
+FV15_00365.png,85-485 Bydgoszcz,6
+FV15_00366.png,Opis:,6
+FV15_00367.png,Allegro00958097-15,6
+FV15_00368.png,Lp. Nazwa towaru/uslugi,6
+FV15_00369.png,Ilosé,6
+FV15_00370.png,J.m. VAT Cena brutto Wartosc netto Wartosé brutto,6
+FV15_00371.png,1 CeraVe Nawilzajacy Balsam 454g,6
+FV15_00372.png,1,6
+FV15_00373.png,szt. 23%,6
+FV15_00374.png,"65,4900",4
+FV15_00375.png,"53,2400",6
+FV15_00376.png,"65,49",4
+FV15_00377.png,Forma platnosci Termin,6
+FV15_00378.png,Kwota Waluta,6
+FV15_00379.png,Stawka VAT Wartosé netto,6
+FV15_00380.png,Kwota VAT Wartosé brutto,6
+FV15_00381.png,PayU,6
+FV15_00382.png,Oplacone,6
+FV15_00383.png,"65,49",4
+FV15_00384.png,PLN Razem,6
+FV15_00385.png,"53,24",6
+FV15_00386.png,"12,25",6
+FV15_00387.png,"65,49",4
+FV15_00388.png,W tym 23%,6
+FV15_00389.png,"53,24",6
+FV15_00390.png,"12,25",6
+FV15_00391.png,"65,49",4
+FV15_00392.png,Razem do zaplaty:,6
+FV15_00393.png,"65,49 PLN",4
+FV15_00394.png,Slownie : szescdziesiqt) pieé PLN 49/100,6
+FV15_00395.png,"Zaplacono: 65,49 PLN",4
+FV15_00396.png,"Pozostaje do zaplaty: 0,00 PLN",6
+FV15_00397.png,Team Blisspointspace,6
+FV15_00398.png,Podpis osoby uprawnionej do wystawienia faktury,6
+FV15_00399.png,Data odbioru,6
+FV15_00400.png,Podpis osoby uprawnionej do odbioru faktury,6
+FV2_00401.png,Faktura VAT numer: 2707/01/2026/E,5
+FV2_00402.png,TEZEUSZP,6
+FV2_00403.png,Data wystawienia: 02.01.2026,6
+FV2_00404.png,Data sprzedazy: 01.01.2026,6
+FV2_00405.png,ANTYKWARIAT I KSIEGARNIA,6
+FV2_00406.png,Miejsce wystawienia dokumentu: Krakow,6
+FV2_00407.png,Termin platnosci: OPLACONO,6
+FV2_00408.png,Metoda platnosci: Platnosc online,6
+FV2_00409.png,Sprzedawca:,6
+FV2_00410.png,Kupujacy:,6
+FV2_00411.png,Antykwariat i Ksiegarnia Tezeusz Sp. Z,0
+FV2_00412.png,Matylda Rogatty,2
+FV2_00413.png,0.0.,0
+FV2_00414.png,Palmowa 39,6
+FV2_00415.png,ul. Armii Krajowej 18,6
+FV2_00416.png,85-485 Bydgoszcz,6
+FV2_00417.png,30-150 Krakow,6
+FV2_00418.png,NIP: 7372208663 BDO: 000484838,1
+FV2_00419.png,"Bank, nr konta:",6
+FV2_00420.png,"Alior Bank SA, 45 2490 0005 0000 4520",6
+FV2_00421.png,9643 6512,6
+FV2_00422.png,Nazwa,6
+FV2_00423.png,llosé,6
+FV2_00424.png,Wartosé netto,6
+FV2_00425.png,Stawka VAT,6
+FV2_00426.png,VAT,6
+FV2_00427.png,Wartosé brutto,6
+FV2_00428.png,82 zasad mitosci,6
+FV2_00429.png,1,6
+FV2_00430.png,21.09 zt.,6
+FV2_00431.png,5%,6
+FV2_00432.png,1.05 zt.,6
+FV2_00433.png,22.14 zt.,6
+FV2_00434.png,Koszt dostawy,6
+FV2_00435.png,1,6
+FV2_00436.png,7.31 zt.,6
+FV2_00437.png,23%,6
+FV2_00438.png,1.68 zt.,6
+FV2_00439.png,8.99 zt.,6
+FV2_00440.png,28.40 zt.,6
+FV2_00441.png,2.73 zt.,6
+FV2_00442.png,31.13 zt.,4
+FV2_00443.png,Stawka,6
+FV2_00444.png,Wartosé netto,6
+FV2_00445.png,Kwota VAT,6
+FV2_00446.png,Wartosé,6
+FV2_00447.png,z podatkiem VAT,6
+FV2_00448.png,zw.,6
+FV2_00449.png,0.00 zt.,6
+FV2_00450.png,0.00 zt.,6
+FV2_00451.png,0.00 zt.,6
+FV2_00452.png,0%,6
+FV2_00453.png,0.00 zt.,6
+FV2_00454.png,0.00 zt.,6
+FV2_00455.png,0.00 zl.,6
+FV2_00456.png,5%,6
+FV2_00457.png,21.09 zt.,6
+FV2_00458.png,1.05 zt.,6
+FV2_00459.png,22.14 zt.,6
+FV2_00460.png,8%,6
+FV2_00461.png,0.00 zl.,6
+FV2_00462.png,0.00 zl.,6
+FV2_00463.png,0.00 zt.,6
+FV2_00464.png,23%,6
+FV2_00465.png,7.31 zl.,6
+FV2_00466.png,1.68 zl.,6
+FV2_00467.png,8.99 zt.,6
+FV3_00468.png,ALLBOARDS GROUP NYCZ Spolka Jawna,0
+FV3_00469.png,Miejsce wystawienia:,6
+FV3_00470.png,"Kamienna 10, 31-403 Krakow",6
+FV3_00471.png,Krakow,6
+FV3_00472.png,"Tel.: 12 380 76 00, NIP: 6772389024",6
+FV3_00473.png,"Alior Bank s.a.,",6
+FV3_00474.png,Data zakonczenia dostawy/uslug,6
+FV3_00475.png,76 2490 0005 0000 4520 1633 5779,6
+FV3_00476.png,25.02.2025,6
+FV3_00477.png,Data wystawienia:,6
+FV3_00478.png,ALL boards,6
+FV3_00479.png,25.02.2025,6
+FV3_00480.png,Sprzedawca:,6
+FV3_00481.png,Nabywca:,6
+FV3_00482.png,ALLBOARDS GROUP NYCZ Spolka Jawna,0
+FV3_00483.png,Matylda Rogatty,2
+FV3_00484.png,Kamienna 10,6
+FV3_00485.png,Palmowa 39,6
+FV3_00486.png,31-403 Krakow,6
+FV3_00487.png,85-485 Bydgoszcz,6
+FV3_00488.png,NIP: 6772389024,1
+FV3_00489.png,NIP:,3
+FV3_00490.png,76 2490 0005 0000 4520 1633 5779,6
+FV3_00491.png,Alior Bank s.a.,6
+FV3_00492.png,Faktura VAT 4047/02/2025 oryginal,5
+FV3_00493.png,na podstawie zamowienia B_119102 Z dnia 24.02.2025,6
+FV3_00494.png,Zamowienie klienta: B_119102,6
+FV3_00495.png,Lp,6
+FV3_00496.png,Symbol Opis,6
+FV3_00497.png,llosc j.m. Cena jednostkowa Wartosc netto VAT Wartosc brutto,6
+FV3_00498.png,brutto,6
+FV3_00499.png,[%],6
+FV3_00500.png,1 TSC7128+ZWB1 Tablica suchoscieralna magnetyczna biala (rama,6
+FV3_00501.png,"1,00 szt.",6
+FV3_00502.png,"119,59",4
+FV3_00503.png,"97,23 23",6
+FV3_00504.png,"119,59",4
+FV3_00505.png,aluminiowa) 120x80 cm TSC7128 + akcesoria,6
+FV3_00506.png,wedlug stawki VAT,6
+FV3_00507.png,wartosc netto kwota VAT wartosc brutto,6
+FV3_00508.png,Podstawowy podatek VAT 23%,6
+FV3_00509.png,"97,23",6
+FV3_00510.png,"22,36",6
+FV3_00511.png,"119,59",4
+FV3_00512.png,Razem:,6
+FV3_00513.png,"97,23",6
+FV3_00514.png,"22,36",6
+FV3_00515.png,"119,59",4
+FV3_00516.png,Razem do zaplaty:,6
+FV3_00517.png,"119,59 PLN",4
+FV3_00518.png,Dokument wystawiony w walucie: PLN,6
+FV3_00519.png,Slownie: sto dziewietnascie PLN 59/100,6
+FV3_00520.png,"Zaplacono przelewem: 119,59",4
+FV3_00521.png,Uwagi do dokumentu: Client:37394007*Platnosci Allegro (Przelewy24),6
+FV3_00522.png,Wystawit(a):,6
+FV3_00523.png,Odebral(a):,6
+FV3_00524.png,System,6
+FV3_00525.png,Podpis osoby upowaznionej do wystawienia faktury VAT,6
+FV3_00526.png,Podpis osoby upowaznionej do odbioru faktury VAT,6
+FV4_00527.png,FAKTURA VAT,6
+FV4_00528.png,DECATHLON,6
+FV4_00529.png,Numer zamowienia:,6
+FV4_00530.png,PL7830171128,6
+FV4_00531.png,Sprzedawca:,6
+FV4_00532.png,Data zamowienia:,6
+FV4_00533.png,25.11.25,6
+FV4_00534.png,Decathlon sp. Z 0.0.,0
+FV4_00535.png,Numer karty lojalnosciowej: 2094469216155,6
+FV4_00536.png,Geodezyjna 76,6
+FV4_00537.png,03-290 Warszawa,6
+FV4_00538.png,Data wystawienia:,6
+FV4_00539.png,25.11.25,6
+FV4_00540.png,Numer NIP: 9511855233,1
+FV4_00541.png,Faktura VAT:,3
+FV4_00542.png,12 25 0075 0002933921,5
+FV4_00543.png,Nr rachunku: 10 1050 0086 1000 0023 1545 2298,6
+FV4_00544.png,Data sprzedazy:,6
+FV4_00545.png,25.11.25,6
+FV4_00546.png,Numer BDO: 000005259,6
+FV4_00547.png,NABYWCA,6
+FV4_00548.png,ADRES DOSTAWY,6
+FV4_00549.png,Matylda ROGATTY,2
+FV4_00550.png,Matylda Rogatty,6
+FV4_00551.png,Dzielnicowa 85,6
+FV4_00552.png,Dzielnicowa 85,6
+FV4_00553.png,54-614 Wroctaw Polska,6
+FV4_00554.png,54-614 Wroclaw Polska,6
+FV4_00555.png,Dziekujemy za zakupy na decathlon.pl,6
+FV4_00556.png,Cena,6
+FV4_00557.png,Wartosc,6
+FV4_00558.png,jednostkowa Stawka Wartosc,6
+FV4_00559.png,Ip.,6
+FV4_00560.png,Nazwa artykulu,6
+FV4_00561.png,Kod llosé J.m.,6
+FV4_00562.png,sprzedazy,6
+FV4_00563.png,brutto po,6
+FV4_00564.png,VAT,6
+FV4_00565.png,VAT,6
+FV4_00566.png,brutto,6
+FV4_00567.png,rabacie,6
+FV4_00568.png,1 Mata do akupresury 4Fizjo,6
+FV4_00569.png,5192170,6
+FV4_00570.png,1,6
+FV4_00571.png,szt.,6
+FV4_00572.png,89.99,4
+FV4_00573.png,8% 6.67,6
+FV4_00574.png,89.99,4
+FV4_00575.png,2 Koszt dostawy,6
+FV4_00576.png,2102120,6
+FV4_00577.png,1,6
+FV4_00578.png,szt.,6
+FV4_00579.png,0,6
+FV4_00580.png,8 %,6
+FV4_00581.png,0.00,6
+FV4_00582.png,0,6
+FV4_00583.png,Wartosc,6
+FV4_00584.png,Wartosc,6
+FV4_00585.png,catkowita Stawka VAT,6
+FV4_00586.png,Kwota catkowita,6
+FV4_00587.png,brutto,6
+FV4_00588.png,podatku,6
+FV4_00589.png,netto,6
+FV4_00590.png,Razem:,6
+FV4_00591.png,89.99,4
+FV4_00592.png,6.67,6
+FV4_00593.png,83.32,6
+FV4_00594.png,W tym VAT:,6
+FV4_00595.png,89.99,4
+FV4_00596.png,8%,6
+FV4_00597.png,6.67,6
+FV4_00598.png,83.32,6
+FV4_00599.png,Waluta: PLN,6
+FV4_00600.png,Razem: 89.99 zt,4
+FV4_00601.png,Sposob platnosci: SPORTYCOINS--GIFTCARD / SPORTYCOINS-GIFTCARD / SPORTYCOINS-GIFTCARD,6
+FV4_00602.png,1/1,6
+FV4_00603.png,"Decathlon Spôtkaz ograniczona odpowiedzialnoscia: zsiedziba wV Warszawie, pod adresem: ul. Geodezyjna 76, 03-290 Warszawa, okapitalez zakladowym W wysokosci",6
+FV4_00604.png,"8.859.465,002 zi, wpisana do Rejestru Przedsiebiorcow Krajowego Rejestru Sadowego prowadzonego przez Sad Rejonowy dla m. st. Warszawy w Warszawie, XIII Wydzial",6
+FV4_00605.png,"Gospodarczy Krajowego Rejestru Sadowego, pod numerem KRS 0000007163,1 legitymujaca sie NIP: 951-18-55-233, onumerze rejestrowym BDO: 000005259",6
+FV5_00606.png,Miejsce wystawienia: Warszawa,6
+FV5_00607.png,Data wystawienia: 30.12.2025r.,6
+FV5_00608.png,Faktura VAT nr FV/INT/19511/12/2025/1,5
+FV5_00609.png,Sprzedawca,6
+FV5_00610.png,Global Parks Poland Sp. Z 0.0.,0
+FV5_00611.png,ul. Fosa 41/11,6
+FV5_00612.png,02-768 Warszawa,6
+FV5_00613.png,NIP: 7010192128,1
+FV5_00614.png,Nabywca,6
+FV5_00615.png,Rogatty Matylda,2
+FV5_00616.png,Odbiorca,6
+FV5_00617.png,Rogatty Matylda,6
+FV5_00618.png,Forma platnosci: karta przedplacona,6
+FV5_00619.png,Lp.,6
+FV5_00620.png,Nazwa,6
+FV5_00621.png,llosc J.M. PKWIU Cena Stawka Wartosc Wartosc,6
+FV5_00622.png,brutto,6
+FV5_00623.png,VAT,6
+FV5_00624.png,VAT,6
+FV5_00625.png,brutto,6
+FV5_00626.png,1 JAM+REL+SAUNARIA Dorosly Dzien,6
+FV5_00627.png,1,6
+FV5_00628.png,szt.,6
+FV5_00629.png,"200,00 8%",6
+FV5_00630.png,"14,81",6
+FV5_00631.png,"200,00",4
+FV5_00632.png,2026-01-02 Wstep do Suntago,6
+FV5_00633.png,RAZEM:,6
+FV5_00634.png,"200,00",4
+FV5_00635.png,Stawka VAT,6
+FV5_00636.png,Wartosc netto,6
+FV5_00637.png,Wartosc VAT,6
+FV5_00638.png,Wartosc brutto,6
+FV5_00639.png,8%,6
+FV5_00640.png,"185,19",6
+FV5_00641.png,"14,81",6
+FV5_00642.png,"200,00",4
+FV5_00643.png,RAZEM:,6
+FV5_00644.png,"185,19",6
+FV5_00645.png,"14,81",6
+FV5_00646.png,"200,00",4
+FV5_00647.png,"Do zaplaty: 200,00",4
+FV5_00648.png,Slownie zlotych: dwiescie zlotych,6
+FV5_00649.png,Podpis osoby upowaznionej do odbioru dokumentu,6
+FV5_00650.png,Dokument wystawiony: za pomoca oprogramowanial iKSORIS www.iksoris.pl(C) 2009 2025 SoftCOM,6
+FV5_00651.png,Licencja dla: Global Parks Poland Sp. .zo.0.,6
+FV5_00652.png,Faktura VAT FV/INT/19511/12/2025/1 Strona 1z1,6
+FV6_00653.png,FAKTURA VAT,6
+FV6_00654.png,F/872210/PL/EF/25,5
+FV6_00655.png,empik Y foto,6
+FV6_00656.png,2025-11-12,6
+FV6_00657.png,2025-11-12,6
+FV6_00658.png,data wystawienia,6
+FV6_00659.png,data wydania,6
+FV6_00660.png,Sprzedawca: EMPIK FOTO Sp. Z 0.0.,0
+FV6_00661.png,Nabywca:,6
+FV6_00662.png,Matylda Rogatty,2
+FV6_00663.png,Adres:,6
+FV6_00664.png,ul. Marszalkowska 104/122,6
+FV6_00665.png,Adres:,6
+FV6_00666.png,Palmowa 39,6
+FV6_00667.png,"00-017 Warsaw, Poland",6
+FV6_00668.png,85-485 Bydgoszcz Polska,6
+FV6_00669.png,NIP:,6
+FV6_00670.png,EU VAT ID: PL 525 275 41 03,1
+FV6_00671.png,NIP:,3
+FV6_00672.png,BDO:,6
+FV6_00673.png,BDO: 000107772,6
+FV6_00674.png,Odbiorca: Matylda Rogatty,6
+FV6_00675.png,Palmowa 39,6
+FV6_00676.png,85-485 Bydgoszcz Polska,6
+FV6_00677.png,Adres,6
+FV6_00678.png,Salon Empik - Bydgoszcz Rondo (SP),6
+FV6_00679.png,dostawy: ul. Kruszwicka 1,6
+FV6_00680.png,85-001 Bydgoszcz PL,6
+FV6_00681.png,Sposob platnosci: platnosc internet i voucher,6
+FV6_00682.png,Transakcja nr: 8285523/1016/1000,6
+FV6_00683.png,data sprzedazy: 2025-11-12,6
+FV6_00684.png,Numer zamowienia: 16863973,6
+FV6_00685.png,Wartosc Stawka Kwota Wartosc,6
+FV6_00686.png,Lp,6
+FV6_00687.png,Nazwa,6
+FV6_00688.png,PKWIU Ilosc Jm Cena netto,6
+FV6_00689.png,netto,6
+FV6_00690.png,VAT,6
+FV6_00691.png,VAT,6
+FV6_00692.png,brutto,6
+FV6_00693.png,1,6
+FV6_00694.png,USLUGA FOTO,6
+FV6_00695.png,"74.20.Z 1 SZTUKA 54,38",6
+FV6_00696.png,"54,38",6
+FV6_00697.png,23%,6
+FV6_00698.png,"12,51",6
+FV6_00699.png,"66,89",4
+FV6_00700.png,Razem,6
+FV6_00701.png,"54,38",6
+FV6_00702.png,X,6
+FV6_00703.png,"12,51",6
+FV6_00704.png,"66,89",4
+FV6_00705.png,W tym,6
+FV6_00706.png,"54,38",6
+FV6_00707.png,23%,6
+FV6_00708.png,"12,51",6
+FV6_00709.png,"66,89",4
+FV6_00710.png,"Razem do zaplaty: 66,89 PLN",4
+FV6_00711.png,Stownie: szescdziesiat szesc zlotych 89/100 gr.,6
+FV6_00712.png,"EMPIK FOTO Sp. z 0.0. ul. Marszalkowska 104/122, 00-017 Warszawa,",6
+FV6_00713.png,"Sad Rejonowy dla m.st. Warszawy W Warszawie, XII Wydzial Gospodarczy Krajowego Rejestru Sadowego numer KRS: 0000736870,",6
+FV6_00714.png,"Regon : 380546457, NIP : 525-275-41-03",6
+FV6_00715.png,Strona 1 z 1,6
+FV7_00716.png,Data wydruku 2024-05-29,6
+FV7_00717.png,Miejsce wystawienia,6
+FV7_00718.png,Katowice,6
+FV7_00719.png,Faktura nr FV/094705/05/2024,5
+FV7_00720.png,Data wystawienia,6
+FV7_00721.png,2024-05-29,6
+FV7_00722.png,ORYGINAL I KOPIAI DUPLIKAT,6
+FV7_00723.png,Data dostawylwykonania uslugi,6
+FV7_00724.png,2024-05-29,6
+FV7_00725.png,SPRZEDAWCA,6
+FV7_00726.png,NABYWCA,6
+FV7_00727.png,MRC Michat Pietowski Spolka Komandytowa,0
+FV7_00728.png,Rogatty Matylda,2
+FV7_00729.png,Miedziana 15,6
+FV7_00730.png,Inzynierska 60/27,6
+FV7_00731.png,40-321 Katowice,6
+FV7_00732.png,53-430 Wroclaw,6
+FV7_00733.png,NIP PL5272691989,1
+FV7_00734.png,Nr BDO: 000507619,6
+FV7_00735.png,PESEL,6
+FV7_00736.png,Forma platnosci PayU,6
+FV7_00737.png,Termin platnosci 29-05-2024,6
+FV7_00738.png,Bank,6
+FV7_00739.png,ING ODDZIAL W KATOWICACH,6
+FV7_00740.png,Nr konta,6
+FV7_00741.png,98 105012141000009031545057,6
+FV7_00742.png,Cena netto Rabat Cena jedn. Wartosc,6
+FV7_00743.png,Kwota,6
+FV7_00744.png,Wartosc,6
+FV7_00745.png,Lp.,6
+FV7_00746.png,Nazwa towaru lub uslugi,6
+FV7_00747.png,Kod,6
+FV7_00748.png,llosc J.m. bez rabatu Narzut Netto,6
+FV7_00749.png,netto st% podatku,6
+FV7_00750.png,brutto,6
+FV7_00751.png,(zi),6
+FV7_00752.png,(%) (zi),6
+FV7_00753.png,(zi),6
+FV7_00754.png,(zi),6
+FV7_00755.png,(zi),6
+FV7_00756.png,1 Fresso Dark Delight zawieszka,6
+FV7_00757.png,"FRE000003 1,0000 szt.",6
+FV7_00758.png,"18,62 0,00",6
+FV7_00759.png,"18,62",6
+FV7_00760.png,"18,62 23",6
+FV7_00761.png,"4,28",6
+FV7_00762.png,"22,90",6
+FV7_00763.png,21 Koszty dostawy,6
+FV7_00764.png,"Koszty 1,0000 szt.",6
+FV7_00765.png,"8,86 0,00",6
+FV7_00766.png,"8,86",6
+FV7_00767.png,"8,86 23",6
+FV7_00768.png,"2,04",6
+FV7_00769.png,"10,90",6
+FV7_00770.png,Dostawy,6
+FV7_00771.png,"Allegro Onel Box, One Kurier dostawa",6
+FV7_00772.png,dzisiaj,6
+FV7_00773.png,RAZEM,6
+FV7_00774.png,"33,80",4
+FV7_00775.png,"27,48 23",6
+FV7_00776.png,"6,32",6
+FV7_00777.png,"33,80",4
+FV7_00778.png,OGOLEM,6
+FV7_00779.png,"27,48",6
+FV7_00780.png,"6,32",6
+FV7_00781.png,"33,80",4
+FV7_00782.png,DO ZAPLATY,6
+FV7_00783.png,"33,80 zl",4
+FV7_00784.png,"Slownie trzydziesci trzy zi, osiemdziesiat gr",6
+FV7_00785.png,WPLATA BIEZACA,6
+FV7_00786.png,"33,80 zt",4
+FV7_00787.png,SUMAI POBRANYCHI ZALICZEK,6
+FV7_00788.png,"0,00 zt",6
+FV7_00789.png,POZOSTALO DO ZAPLATY:,6
+FV7_00790.png,"0,00 zl",6
+FV7_00791.png,"Slownie zi, zero gr",6
+FV7_00792.png,podpis osoby upowaznionej,6
+FV7_00793.png,data odbioru,6
+FV7_00794.png,podpis ip pieczec osoby upowaznionej,6
+FV7_00795.png,do odbioru fakturv,6
+FV7_00796.png,do wvstawienia fakturv,6
+FV7_00797.png,Wydruk zp programu WAPRO Mag W wersji 8.90.2,6
+FV7_00798.png,Strona 1/1,6
+FV8_00799.png,Ostrovit: Spotka Z ograniczona odpowiedzialnoscia,0
+FV8_00800.png,OstroVit,6
+FV8_00801.png,Sitarska 16 18300 - Zambrow Poland,6
+FV8_00802.png,NIP: 7231641151,1
+FV8_00803.png,BDO: 000579715,6
+FV8_00804.png,Adres dostawy:,6
+FV8_00805.png,Nabywca:,6
+FV8_00806.png,"Matylda Rogatty, Allegro Onel Box, zielony automat",6
+FV8_00807.png,"Matylda Rogatty, Matylda Rogatty",2
+FV8_00808.png,Krzemieniecka 46c,6
+FV8_00809.png,Dzielnicowa 8/5,6
+FV8_00810.png,54-613 Wroctaw,6
+FV8_00811.png,54-614Wroctaw,6
+FV8_00812.png,Polska,6
+FV8_00813.png,Polska,6
+FV8_00814.png,Faktura FS/2025/10/44962,5
+FV8_00815.png,Nr zamowienia:,6
+FV8_00816.png,Data: sprzedazy:,6
+FV8_00817.png,Data wystawienia:,6
+FV8_00818.png,Termin platnosci:,6
+FV8_00819.png,Termin platnosci:,6
+FV8_00820.png,118274744,6
+FV8_00821.png,20.10.2025,6
+FV8_00822.png,20.10.2025,6
+FV8_00823.png,Platnosc natychmiastowa,6
+FV8_00824.png,20.10.2025,6
+FV8_00825.png,"Przewoznik: Allegro Onel Box, Onel Kurier",6
+FV8_00826.png,Odnosnik przesytki: A002YUL378,6
+FV8_00827.png,Kontol bankowe:,6
+FV8_00828.png,BIC:,6
+FV8_00829.png,PLO4 1020: 3802 0000 12020 0134 7087,6
+FV8_00830.png,BPKOPLPW,6
+FV8_00831.png,LP. NAZWAT TOWARU/USEUGI,6
+FV8_00832.png,KODCN,6
+FV8_00833.png,EAN ILOSC J.M. VAT CENA WARTOSC WARTOSC,6
+FV8_00834.png,JEDN.,6
+FV8_00835.png,NETTO,6
+FV8_00836.png,BRUTTO,6
+FV8_00837.png,"1 [19118JOstroVit) Vitamin D3 4000 +h K2 (1001 tabs) 21069098 5903246220278 1,00 Szt 8% 14,96",6
+FV8_00838.png,"13,85zt",6
+FV8_00839.png,"14,96z zt",6
+FV8_00840.png,"2 [25673JOstroViti Magnesium Citrate 4001 mg + B6 90 21069098 5903246229516 1,00 Szt 8% 14,02",6
+FV8_00841.png,"12,98zt",6
+FV8_00842.png,"14,02zt",6
+FV8_00843.png,tabs,6
+FV8_00844.png,"3 [23764J0stroVit Omega 3(150 caps limited edition) 21069098 59032462227391 1,00 Szt 8% 29,99",6
+FV8_00845.png,"27,77zt",6
+FV8_00846.png,"29,991 zt",6
+FV8_00847.png,"4 [16669]0 OstroVit 100%1 Peanut Butter (1000 g,smooth) 20081110 5902232613766 1,00 Szt 5% 18,72",6
+FV8_00848.png,"17,83zt",6
+FV8_00849.png,"18,72zt",6
+FV8_00850.png,"5 [27114JOstroVit) Vitamin B121 Methylcobalamin: 1001 ug 21069098 5903933921563 1,00 Szt 8% 12,99",6
+FV8_00851.png,"12,03zt",6
+FV8_00852.png,"12,992 zt",6
+FV8_00853.png,120t tabs,6
+FV8_00854.png,6 [24815] OstroVitz Zincl Picolinate (1501 tabs),6
+FV8_00855.png,"21069098 5903246224535 1,00 Szt 8% 14,90",6
+FV8_00856.png,"13,80zt",6
+FV8_00857.png,"14,90z zt",6
+FV8_00858.png,Kwotal bez podatku,6
+FV8_00859.png,"98,26 zt",6
+FV8_00860.png,"VAT 23%1 na 0,00 zt",6
+FV8_00861.png,"0,002 zt",6
+FV8_00862.png,"VAT 8% na 80,43 zt",6
+FV8_00863.png,"6,43zt",6
+FV8_00864.png,"VAT 5% na 17,83zt",6
+FV8_00865.png,"0,89zt",6
+FV8_00866.png,Suma,6
+FV8_00867.png,"105,58 zt",4
+FV8_00868.png,Zaptacono dnia: 20.10.2025,6
+FV8_00869.png,"105,58 zt",4
+FV8_00870.png,Naleznosc,6
+FV8_00871.png,"0,00zt",6
+FV8_00872.png,Warunki ptatnosci: ptatnosc natychmiastowa,6
+FV8_00873.png,Strona: 1/2,6
+FV9_00874.png,Sprzedawca:,6
+FV9_00875.png,Faktura VAT,6
+FV9_00876.png,MORELE.NET sp. Z 0.0.,0
+FV9_00877.png,nr FS-199/1/2025/SOS,5
+FV9_00878.png,Data wystawienia:,6
+FV9_00879.png,2025-01-02,6
+FV9_00880.png,al. Jana Pawlal II 43b,6
+FV9_00881.png,Data dostawy/wykonania uslugi:,6
+FV9_00882.png,2025-01-02,6
+FV9_00883.png,31-864 Krakow,6
+FV9_00884.png,NIP: 9451972201,1
+FV9_00885.png,0102033002662619767,6
+FV9_00886.png,Nr rejestrowy BDO: 000016130,6
+FV9_00887.png,Strona: 1z1,6
+FV9_00888.png,Bank: mBank CompanyNet 02114010810000354338001001,6
+FV9_00889.png,Nabywca:,6
+FV9_00890.png,Odbiorca:,6
+FV9_00891.png,Matylda Rogatty,2
+FV9_00892.png,Matylda Rogatty,6
+FV9_00893.png,54-614 Wroclaw,6
+FV9_00894.png,54-614 Wroclaw,6
+FV9_00895.png,Dzielnicowa 8/5,6
+FV9_00896.png,Dzielnicowa 8/5,6
+FV9_00897.png,Zamowienia: ZS-2064/1/2025/SOS(18816718],6
+FV9_00898.png,Opis: Zamowienie numer 18816718,6
+FV9_00899.png,Lp. Kod,6
+FV9_00900.png,PKWIU,6
+FV9_00901.png,Ilosc/J.m.,6
+FV9_00902.png,Cena brutto Wartosé brutto VAT,6
+FV9_00903.png,Nazwa towaru,6
+FV9_00904.png,PLN,6
+FV9_00905.png,PLN,6
+FV9_00906.png,1 4912508,6
+FV9_00907.png,SZT,6
+FV9_00908.png,"58,90",4
+FV9_00909.png,"58,90 23%",4
+FV9_00910.png,Waga lazienkowa Xiaomi Smart Scale 2,6
+FV9_00911.png,Forma platnosci,6
+FV9_00912.png,Termin,6
+FV9_00913.png,Kwota Waluta,6
+FV9_00914.png,Stawka,6
+FV9_00915.png,Netto(PLN) VAT (PLN) Brutto (PLN),6
+FV9_00916.png,przedplata,6
+FV9_00917.png,2025-01-02,6
+FV9_00918.png,"58,90 PLN Razem:",4
+FV9_00919.png,"47,89",6
+FV9_00920.png,"11,01",6
+FV9_00921.png,"58,90",4
+FV9_00922.png,W tym: 23%,6
+FV9_00923.png,"47,89",6
+FV9_00924.png,"11,01",6
+FV9_00925.png,"58,90",4
+FV9_00926.png,Razem do zaplaty:,6
+FV9_00927.png,"58,90 PLN",4
+FV9_00928.png,Slownie: piecdziesiat osiem PLN 90/100,6
+FV9_00929.png,Automat,6
+FV9_00930.png,Podpis osoby uprawnionej do wystawienia faktury,6
+FV9_00931.png,Potwierdzenie odbioru,6
+FV9_00932.png,Dokumentj jest dowodem wydania towaru zawarcia umowyl kupna sprzedazy naz zasadach opisanych w Regulaminie: zakupow dostepnym na www.morele.net,6

@@ -1,0 +1,9 @@
+__pycache__/
+.idea/
+*.pyc
+
+data/images/
+data/raw/
+output/
+
+models/*.pth

@@ -1,0 +1,12 @@
+LABELS = {
+    0: "SELLER_NAME",
+    1: "SELLER_NIP",
+    2: "BUYER_NAME",
+    3: "BUYER_NIP",
+    4: "TOTAL_PRICE",
+    5: "INVOICE_NUMBER",
+    6: "OTHER"
+}
+
+NUM_CLASSES = len(LABELS)
+IMG_SIZE = 128
