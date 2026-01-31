@@ -5,7 +5,7 @@ z wykorzystaniem PyTorch.
 
 ## Funkcjonalności
 - OCR fragmentów faktury
-- Klasyfikacja tekstu (NIP, sprzedawca, data, inne)
+- Klasyfikacja tekstu (SELLER_NAME, SELLER_NIP, BUYER_NAME, BUYER_NIP, TOTAL_PRICE, INVOICE_NUMBER, OTHER)
 - Inference na nowych fakturach PDF
 
 ## Struktura
