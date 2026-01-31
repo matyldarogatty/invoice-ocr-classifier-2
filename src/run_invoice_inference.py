@@ -12,10 +12,10 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 MODEL_PATH = "models/invoice_cnn.pth"
 OUTPUT_DIR = "output/predictions"
 
-# -------------------- OCR --------------------
+# OCR
 ocr_model = ocr_predictor(pretrained=True)
 
-# -------------------- CNN --------------------
+#  CNN
 model = InvoiceCNN().to(DEVICE)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.eval()
@@ -84,7 +84,7 @@ def analyze_invoice(pdf_path):
             sample_id += 1
 
 
-# -------------------- URUCHOMIENIE --------------------
+#  URUCHOMIENIE
 if __name__ == "__main__":
     import sys
     analyze_invoice(sys.argv[1])

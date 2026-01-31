@@ -32,7 +32,6 @@ def get_line_bbox_pixels(line, page):
 
     return x1, y1, x2, y2
 
-
 rows = []
 global_id = 0
 
@@ -66,7 +65,6 @@ for pdf_name in os.listdir(input_dir):
 
             rows.append([filename, text, ""])
             global_id += 1
-
 
 # zapis CSV
 with open(csv_path, "w", newline="", encoding="utf-8") as f:
