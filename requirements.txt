@@ -1,0 +1,9 @@
+# Core ML + data (synthetic PDF generator: see synthetic_invoice_generator/requirements.txt)
+torch
+torchvision
+pandas
+numpy
+scikit-learn
+joblib
+Pillow
+python-doctr
