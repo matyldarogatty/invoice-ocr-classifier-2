@@ -7,3 +7,5 @@ data/raw/
 output/
 
 models/*.pth
+
+synthetic_invoice_generator/out/

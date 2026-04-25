@@ -5,7 +5,12 @@ LABELS = {
     3: "BUYER_NIP",
     4: "TOTAL_PRICE",
     5: "INVOICE_NUMBER",
-    6: "OTHER"
+    6: "INVOICE_DATE",
+    7: "SALE_DATE",
+    8: "NET_AMOUNT",
+    9: "VAT_AMOUNT",
+    10: "CURRENCY",
+    11: "OTHER",
 }
 
 NUM_CLASSES = len(LABELS)

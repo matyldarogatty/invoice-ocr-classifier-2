@@ -1,0 +1,76 @@
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+html, body {
+  font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  font-size: 9.5pt;
+  color: #111;
+}
+
+.lbl {
+  font-weight: 600;
+  color: #333;
+}
+
+.val {
+  margin-left: 0.25em;
+}
+
+.strong {
+  font-weight: 700;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.items-title {
+  font-size: 10pt;
+  margin: 0.6em 0 0.35em;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.25em;
+}
+
+.items-table th,
+.items-table td {
+  padding: 0.25em 0.35em;
+  vertical-align: top;
+}
+
+.totals-table {
+  border-collapse: collapse;
+  min-width: 220px;
+}
+
+.totals-table td {
+  padding: 0.2em 0.5em;
+}
+
+.totals-label {
+  font-weight: 600;
+}
+
+.totals-val {
+  text-align: right;
+}
+
+.totals-strong .totals-label,
+.totals-strong .totals-val {
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+.muted {
+  color: #555;
+}
+
+.small {
+  font-size: 8.5pt;
+}

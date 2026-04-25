@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8"/>
+  <title>Faktura {{ inv.invoice_number }}</title>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/layout_b.css"/>
+</head>
+<body>
+  <header class="doc-header stack-header">
+    <h1 class="main-title">{{ c.invoice_number }}</h1>
+    <p><span class="lbl">{{ c.invoice_number }}</span> <span class="val strong">{{ inv.invoice_number }}</span></p>
+    <p><span class="lbl">{{ c.invoice_date }}</span> <span class="val">{{ d.invoice_date }}</span></p>
+    <p><span class="lbl">{{ c.sale_date }}</span> <span class="val">{{ d.sale_date }}</span></p>
+  </header>
+
+  <div class="party-stack">
+    <section class="party-card">
+      <h2>{{ c.seller }}</h2>
+      <p class="party-name">{{ d.seller_name }}</p>
+      <p><span class="lbl">{{ c.seller_nip }}</span> {{ d.seller_nip }}</p>
+      <p>{{ inv.seller.address.street }}</p>
+      <p>{{ inv.seller.address.postal_code }} {{ inv.seller.address.city }}</p>
+      <p>{{ inv.seller.address.country }}</p>
+    </section>
+    <section class="party-card">
+      <h2>{{ c.buyer }}</h2>
+      <p class="party-name">{{ d.buyer_name }}</p>
+      <p><span class="lbl">{{ c.buyer_nip }}</span> {{ d.buyer_nip }}</p>
+      <p>{{ inv.buyer.address.street }}</p>
+      <p>{{ inv.buyer.address.postal_code }} {{ inv.buyer.address.city }}</p>
+      <p>{{ inv.buyer.address.country }}</p>
+    </section>
+  </div>
+
+  <div class="pay-box">
+    <p><span class="lbl">{{ c.payment_method }}</span> {{ inv.payment_method }}</p>
+    <p><span class="lbl">{{ c.payment_due }}</span> {{ d.payment_due }}</p>
+  </div>
+
+  {% include 'partials/items_table.html' %}
+
+  <div class="totals-wrap">
+    {% include 'partials/totals_block.html' %}
+  </div>
+</body>
+</html>

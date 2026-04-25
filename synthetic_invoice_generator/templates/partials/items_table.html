@@ -1,0 +1,33 @@
+<section class="items-section">
+  <h2 class="items-title">{{ c.items_header }}</h2>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>{{ c.ordinal }}</th>
+        <th>Nazwa</th>
+        <th>{{ c.quantity }}</th>
+        <th>{{ c.unit }}</th>
+        <th>{{ c.unit_net }}</th>
+        <th>{{ c.vat_rate }}</th>
+        <th>{{ c.line_net }}</th>
+        <th>{{ c.line_vat }}</th>
+        <th>{{ c.line_gross }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in inv.items %}
+      <tr>
+        <td class="num">{{ it.ordinal }}</td>
+        <td>{{ it.name }}</td>
+        <td class="num">{{ it.quantity }}</td>
+        <td>{{ it.unit }}</td>
+        <td class="num">{{ fmt_money(it.unit_net) }}</td>
+        <td class="num">{{ it.vat_rate_percent }}%</td>
+        <td class="num">{{ fmt_money(it.line_net) }}</td>
+        <td class="num">{{ fmt_money(it.line_vat) }}</td>
+        <td class="num">{{ fmt_money(it.line_gross) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>

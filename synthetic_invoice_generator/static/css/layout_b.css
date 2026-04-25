@@ -1,0 +1,61 @@
+/* Stacked parties, boxed payment, bordered totals */
+
+.stack-header {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.main-title {
+  font-size: 14pt;
+  margin: 0 0 0.35em;
+}
+
+.party-stack {
+  display: block;
+}
+
+.party-card {
+  border: 2px solid #222;
+  padding: 0.65em 0.85em;
+  margin-bottom: 0.75em;
+  background: #fafafa;
+}
+
+.party-card h2 {
+  margin: 0 0 0.35em;
+  font-size: 10pt;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pay-box {
+  border: 1px dashed #444;
+  padding: 0.5em 0.75em;
+  margin: 0.75em 0;
+  background: #fff;
+}
+
+.items-table th {
+  border-bottom: 2px solid #000;
+  font-size: 8.5pt;
+}
+
+.items-table td {
+  border-bottom: 1px solid #aaa;
+}
+
+.totals-wrap {
+  margin-top: 1.25em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.totals-section {
+  border: 2px solid #000;
+  padding: 0.75em 1em;
+  background: #eee;
+}
+
+.totals-table .totals-val {
+  min-width: 100px;
+}

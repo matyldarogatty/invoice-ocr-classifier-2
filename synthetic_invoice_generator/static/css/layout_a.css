@@ -1,0 +1,69 @@
+/* Classic side-by-side parties, dense table, footer totals */
+
+.doc-header {
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.75em;
+}
+
+.inv-meta .row {
+  margin: 0.15em 0;
+}
+
+.parties-side {
+  display: table;
+  width: 100%;
+  margin-bottom: 0.75em;
+}
+
+.parties-side .party-block {
+  display: table-cell;
+  width: 50%;
+  vertical-align: top;
+  padding-right: 1em;
+}
+
+.party-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 8.5pt;
+  margin-bottom: 0.25em;
+}
+
+.party-name {
+  font-weight: 700;
+  margin-bottom: 0.35em;
+}
+
+.addr {
+  margin: 0.08em 0;
+}
+
+.pay-row {
+  margin: 0.5em 0 0.75em;
+  font-size: 9pt;
+}
+
+.items-table th {
+  border: 1px solid #333;
+  background: #e8e8e8;
+  font-size: 8pt;
+}
+
+.items-table td {
+  border: 1px solid #444;
+}
+
+.dense-footer {
+  margin-top: 1em;
+  padding-top: 0.5em;
+  border-top: 1px solid #333;
+}
+
+.totals-table {
+  margin-left: auto;
+}
+
+.totals-table tr:nth-child(odd) {
+  background: #f5f5f5;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8"/>
+  <title>Faktura {{ inv.invoice_number }}</title>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/layout_a.css"/>
+</head>
+<body>
+  <header class="doc-header">
+    <div class="inv-meta">
+      <div class="row"><span class="lbl">{{ c.invoice_number }}</span> <span class="val strong">{{ inv.invoice_number }}</span></div>
+      <div class="row"><span class="lbl">{{ c.invoice_date }}</span> <span class="val">{{ d.invoice_date }}</span></div>
+      <div class="row"><span class="lbl">{{ c.sale_date }}</span> <span class="val">{{ d.sale_date }}</span></div>
+    </div>
+  </header>
+
+  <div class="parties parties-side">
+    <div class="party-block">
+      <div class="party-title">{{ c.seller }}</div>
+      <div class="party-name">{{ d.seller_name }}</div>
+      <div class="row"><span class="lbl">{{ c.seller_nip }}</span> <span class="val">{{ d.seller_nip }}</span></div>
+      <div class="addr">{{ inv.seller.address.street }}</div>
+      <div class="addr">{{ inv.seller.address.postal_code }} {{ inv.seller.address.city }}</div>
+      <div class="addr">{{ inv.seller.address.country }}</div>
+    </div>
+    <div class="party-block">
+      <div class="party-title">{{ c.buyer }}</div>
+      <div class="party-name">{{ d.buyer_name }}</div>
+      <div class="row"><span class="lbl">{{ c.buyer_nip }}</span> <span class="val">{{ d.buyer_nip }}</span></div>
+      <div class="addr">{{ inv.buyer.address.street }}</div>
+      <div class="addr">{{ inv.buyer.address.postal_code }} {{ inv.buyer.address.city }}</div>
+      <div class="addr">{{ inv.buyer.address.country }}</div>
+    </div>
+  </div>
+
+  <div class="pay-row">
+    <span class="lbl">{{ c.payment_method }}</span> <span class="val">{{ inv.payment_method }}</span>
+    &nbsp;&nbsp;
+    <span class="lbl">{{ c.payment_due }}</span> <span class="val">{{ d.payment_due }}</span>
+  </div>
+
+  {% include 'partials/items_table.html' %}
+
+  <footer class="doc-footer dense-footer">
+    {% include 'partials/totals_block.html' %}
+  </footer>
+</body>
+</html>

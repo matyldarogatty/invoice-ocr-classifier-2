@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ inv.invoice_number }}</title>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/layout_c.css"/>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-label">{{ c.invoice_number }}</div>
+      <div class="hero-value">{{ inv.invoice_number }}</div>
+    </div>
+    <div class="hero-right">
+      <div><span class="muted">{{ c.invoice_date }}</span> {{ d.invoice_date }}</div>
+      <div><span class="muted">{{ c.sale_date }}</span> {{ d.sale_date }}</div>
+    </div>
+  </div>
+
+  <div class="split-after-hero">
+    <div class="narrow-col">
+      <div class="mini-block">
+        <div class="mini-h">{{ c.seller }}</div>
+        <div>{{ d.seller_name }}</div>
+        <div class="nip-line">{{ c.seller_nip }} {{ d.seller_nip }}</div>
+        <div class="small">{{ inv.seller.address.street }}, {{ inv.seller.address.postal_code }} {{ inv.seller.address.city }}</div>
+      </div>
+      <div class="mini-block">
+        <div class="mini-h">{{ c.buyer }}</div>
+        <div>{{ d.buyer_name }}</div>
+        <div class="nip-line">{{ c.buyer_nip }} {{ d.buyer_nip }}</div>
+        <div class="small">{{ inv.buyer.address.street }}, {{ inv.buyer.address.postal_code }} {{ inv.buyer.address.city }}</div>
+      </div>
+      <div class="mini-block muted small">
+        {{ c.payment_method }}: {{ inv.payment_method }}<br/>
+        {{ c.payment_due }}: {{ d.payment_due }}
+      </div>
+    </div>
+    <div class="wide-col">
+      {% include 'partials/items_table.html' %}
+    </div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="sum-item"><span class="muted">{{ c.net }}</span> {{ d.net }} {{ d.currency }}</div>
+    <div class="sum-item"><span class="muted">{{ c.vat }}</span> {{ d.vat }} {{ d.currency }}</div>
+    <div class="sum-item strong"><span class="muted">{{ c.gross }}</span> {{ d.gross }} {{ d.currency }}</div>
+  </div>
+</body>
+</html>

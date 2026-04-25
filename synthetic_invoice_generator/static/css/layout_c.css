@@ -1,0 +1,84 @@
+/* Sparse modern: hero header, split columns, light table, summary bar */
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
+.hero-label {
+  font-size: 8pt;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.hero-value {
+  font-size: 18pt;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.hero-right {
+  text-align: right;
+  font-size: 10pt;
+}
+
+.split-after-hero {
+  display: flex;
+  gap: 1.5em;
+  align-items: flex-start;
+}
+
+.narrow-col {
+  flex: 0 0 32%;
+  max-width: 38%;
+}
+
+.wide-col {
+  flex: 1;
+}
+
+.mini-block {
+  margin-bottom: 1em;
+}
+
+.mini-h {
+  font-weight: 700;
+  font-size: 8pt;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 0.25em;
+}
+
+.nip-line {
+  font-size: 9pt;
+  margin: 0.25em 0;
+}
+
+.items-table th {
+  border-bottom: 1px solid #999;
+  font-weight: 600;
+  font-size: 8pt;
+}
+
+.items-table td {
+  border-bottom: 1px solid #ddd;
+}
+
+.summary-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2em;
+  margin-top: 1.5em;
+  padding-top: 0.75em;
+  border-top: 2px solid #111;
+  font-size: 10pt;
+}
+
+.sum-item.strong {
+  font-weight: 700;
+  font-size: 11pt;
+}

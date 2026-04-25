@@ -1,0 +1,4 @@
+Jinja2>=3.1.0
+WeasyPrint>=60.0
+Faker>=24.0.0
+pytest>=7.0.0
