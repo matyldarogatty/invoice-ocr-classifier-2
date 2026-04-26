@@ -33,6 +33,70 @@ def _strip_currency_tokens(s: str) -> str:
     return t
 
 
+def _norm_currency_token_to_iso(tok: str) -> Optional[str]:
+    """Map one OCR word (after basic normalize) to PLN / EUR / USD, or None."""
+    if not tok:
+        return None
+    t = normalize_basic(tok)
+    if t in ("pln", "zł", "zl"):
+        return "PLN"
+    if t == "eur":
+        return "EUR"
+    if t == "usd":
+        return "USD"
+    return None
+
+
+def _is_standalone_currency_line(variant: str) -> bool:
+    """
+    True if the line is only one or more currency tokens (and whitespace).
+    False if a monetary amount (digits) remains after removing currency words.
+    """
+    n = normalize_basic(variant)
+    if not n or not re.search(
+        r"(?i)(?:\bpln\b|\bzł\b|\bzl\b|\beur\b|\busd\b)", n
+    ):
+        return False
+    if try_parse_amount(variant) is not None:
+        rem = re.sub(
+            r"(?i)(?:\bpln\b|\bzł\b|\bzl\b|\beur\b|\busd\b)", "", n
+        )
+        rem = re.sub(r"\s+", "", rem)
+        if re.search(r"\d", rem):
+            return False
+    toks = [t for t in n.split() if t]
+    for tok in toks:
+        if _norm_currency_token_to_iso(tok) is None:
+            return False
+    return True
+
+
+def _hint_to_iso_currencies(canonical: str, rendered: str) -> Set[str]:
+    """Invoice CURRENCY: canonical is PLN/EUR/USD; rendered may be zł or the code."""
+    s: Set[str] = set()
+    c = (canonical or "").strip().upper()
+    if c in ("PLN", "EUR", "USD"):
+        s.add(c)
+    r_iso = _norm_currency_token_to_iso(rendered or "")
+    if r_iso:
+        s.add(r_iso)
+    if not s and rendered:
+        ru = (rendered or "").strip().upper()
+        if ru in ("PLN", "EUR", "USD"):
+            s.add(ru)
+    return s
+
+
+def _ocr_line_to_iso_currencies(variant: str) -> Set[str]:
+    n = normalize_basic(variant)
+    out: Set[str] = set()
+    for tok in n.split():
+        iso = _norm_currency_token_to_iso(tok)
+        if iso:
+            out.add(iso)
+    return out
+
+
 def try_parse_amount(s: str) -> Optional[Decimal]:
     """Parse Polish-style or plain amounts from a fragment."""
     if not s:
@@ -210,6 +274,13 @@ def _tier_for_hint(
             return 4, "date_rendered", rendered, 0
 
     if semantic == "CURRENCY":
+        # Line is only e.g. "PLN" / "zł" — v2 is empty; match via token map + hint
+        if _is_standalone_currency_line(variant):
+            ocr_iso = _ocr_line_to_iso_currencies(variant)
+            hint_iso = _hint_to_iso_currencies(canonical, rendered)
+            if ocr_iso and hint_iso and (ocr_iso & hint_iso):
+                mval = rendered if (rendered or "").strip() else canonical
+                return 2, "currency_standalone_token", mval, 0
         v2 = _strip_currency_tokens(variant)
         c2 = normalize_basic(canonical)
         r2 = normalize_basic(rendered)

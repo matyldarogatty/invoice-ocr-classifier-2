@@ -92,6 +92,8 @@ Useful flags:
 
 | `--fail-fast` | Exit on first error |
 
+| `--overwrite` | Allow reusing an `--out-dir` that already has a manifest and/or PDFs (default: refuse, to avoid accidental append/overwrite) |
+
 
 
 ## Outputs

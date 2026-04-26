@@ -50,6 +50,17 @@ def _parse_currency_mode(arg: str) -> str:
     raise argparse.ArgumentTypeError("currency-mode must be mixed, PLN, EUR, or USD")
 
 
+def _output_dir_has_generated_files(out_dir: Path) -> bool:
+    """True if a previous run likely wrote PDFs and/or a non-empty manifest."""
+    manifest = out_dir / MANIFEST_FILENAME
+    if manifest.is_file() and manifest.stat().st_size > 0:
+        return True
+    pdfs = out_dir / PDF_SUBDIR
+    if pdfs.is_dir() and any(p.is_file() for p in pdfs.iterdir()):
+        return True
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Generate synthetic invoice PDFs and ground truth.")
     p.add_argument("--count", type=int, default=10)
@@ -65,6 +76,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--fail-fast", action="store_true")
     p.add_argument("--log-level", default="INFO", choices=("DEBUG", "INFO", "WARNING", "ERROR"))
+    p.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Allow using an --out-dir that already contains a manifest and/or PDFs (otherwise use a new directory).",
+    )
 
     args = p.parse_args(argv)
     logging.basicConfig(
@@ -80,6 +96,14 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     out_dir: Path = args.out_dir.resolve()
+    if not args.overwrite and _output_dir_has_generated_files(out_dir):
+        log.error(
+            "Output directory %s already contains generated files (manifest and/or PDFs). "
+            "Use a new --out-dir for a clean batch, or pass --overwrite to continue here "
+            "(manifest lines append; PDFs/JSON with the same invoice_id may be replaced).",
+            out_dir,
+        )
+        return 2
     ensure_run_dirs(out_dir)
     if args.keep_html:
         (out_dir / HTML_SUBDIR).mkdir(parents=True, exist_ok=True)

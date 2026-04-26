@@ -13,6 +13,7 @@ import csv
 import json
 import logging
 import random
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -35,6 +36,9 @@ PROJECT_ROOT = _SRC.parent
 
 SEMANTIC_TO_LABEL_ID: Dict[str, int] = {name: i for i, name in LABELS.items()}
 OTHER_ID = SEMANTIC_TO_LABEL_ID["OTHER"]
+_CURRENCY_TOKEN_IN_TEXT = re.compile(
+    r"(?i)(?:\bpln\b|\bzł\b|\bzl\b|\beur\b|\busd\b)"
+)
 
 
 def get_line_bbox_pixels(line, page) -> Tuple[int, int, int, int]:
@@ -114,6 +118,7 @@ def run_export(args: argparse.Namespace) -> int:
     lines_manifest: List[str] = manifest_path.read_text(encoding="utf-8").splitlines()
     rows_out: List[Dict[str, Any]] = []
     review_rows: List[Dict[str, Any]] = []
+    diagnostic_rows: List[Dict[str, Any]] = []
 
     stats = {
         "invoices_processed": 0,
@@ -238,18 +243,21 @@ def run_export(args: argparse.Namespace) -> int:
                         "semantic_name": sem_name,
                     }
                 )
-                review_rows.append(
-                    {
-                        "invoice_id": invoice_id,
-                        "filename": filename,
-                        "text": text,
-                        "label": label_id,
-                        "semantic_name": sem_name,
-                        "matched_value": decision.matched_value,
-                        "match_type": decision.match_type,
-                        "reason": decision.reason,
-                    }
-                )
+                rev = {
+                    "invoice_id": invoice_id,
+                    "filename": filename,
+                    "text": text,
+                    "label": label_id,
+                    "semantic_name": sem_name,
+                    "matched_value": decision.matched_value,
+                    "match_type": decision.match_type,
+                    "reason": decision.reason,
+                }
+                review_rows.append(rev)
+                if bool(getattr(args, "write_diagnostics", False)) and _CURRENCY_TOKEN_IN_TEXT.search(
+                    text
+                ):
+                    diagnostic_rows.append(rev)
                 line_idx += 1
 
         stats["invoices_processed"] += 1
@@ -313,10 +321,12 @@ def run_export(args: argparse.Namespace) -> int:
 
     total_lines = max(1, stats["ocr_lines_total"])
     match_rate = stats["labeled_non_other"] / total_lines
+    cur_matched = int(stats["per_class_counts"].get("CURRENCY", 0))
     summary = {
         **{k: v for k, v in stats.items() if k != "per_class_counts"},
         "per_class_counts": dict(stats["per_class_counts"]),
         "match_rate_non_other": round(match_rate, 4),
+        "currency_matched_lines": cur_matched,
     }
 
     log.info("=== Export summary ===")
@@ -329,7 +339,42 @@ def run_export(args: argparse.Namespace) -> int:
     log.info("OCR errors: %s", stats["ocr_errors"])
     log.info("Match rate (non-OTHER / all lines): %.2f%%", 100.0 * match_rate)
     log.info("Per-class counts: %s", dict(stats["per_class_counts"]))
+    log.info("CURRENCY — matched %s line(s) in this export", cur_matched)
+    # Readable distribution by config order (all classes, including zeros)
+    dist_parts = []
+    for i in sorted(LABELS.keys()):
+        name = LABELS[i]
+        cnt = int(stats["per_class_counts"].get(name, 0))
+        dist_parts.append(f"{name}={cnt}")
+    log.info("Final class distribution: %s", "  ".join(dist_parts))
     print(json.dumps(summary, indent=2, ensure_ascii=False))
+
+    if bool(getattr(args, "write_diagnostics", False)) and diagnostic_rows:
+        dpath = (
+            Path(args.diagnostics_csv).expanduser()
+            if (args.diagnostics_csv and str(args.diagnostics_csv).strip())
+            else (csv_path.parent / "currency_candidate_lines.csv")
+        )
+        dpath.parent.mkdir(parents=True, exist_ok=True)
+        with dpath.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(
+                f,
+                fieldnames=[
+                    "invoice_id",
+                    "filename",
+                    "text",
+                    "label",
+                    "semantic_name",
+                    "matched_value",
+                    "match_type",
+                    "reason",
+                ],
+            )
+            w.writeheader()
+            w.writerows(diagnostic_rows)
+        log.info("Wrote currency diagnostic file (%s rows): %s", len(diagnostic_rows), dpath)
+    elif bool(getattr(args, "write_diagnostics", False)):
+        log.info("No currency-token OCR lines; skipping currency_candidate_lines.csv")
 
     if summary_json_path:
         summary_json_path.parent.mkdir(parents=True, exist_ok=True)
@@ -395,6 +440,17 @@ def main() -> int:
         help="If > 0, also write labels_synthetic_review_sample.csv with N random rows",
     )
     p.add_argument("--seed", type=int, default=42, help="RNG seed for review sample")
+    p.add_argument(
+        "--write-diagnostics",
+        action="store_true",
+        help="Write currency_candidate_lines.csv (OCR lines containing PLN/zł/EUR/USD tokens) for inspection.",
+    )
+    p.add_argument(
+        "--diagnostics-csv",
+        type=str,
+        default="",
+        help="Destination for currency diagnostics (default: currency_candidate_lines.csv next to --csv-path).",
+    )
     args = p.parse_args()
     if args.limit == 0:
         args.limit = None

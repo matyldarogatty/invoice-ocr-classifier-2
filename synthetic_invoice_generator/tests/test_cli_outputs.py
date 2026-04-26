@@ -92,6 +92,27 @@ def test_cli_dry_run_writes_json_and_manifest(tmp_path: Path):
         assert data["meta"]["label_locale"] == "pl"
 
 
+def test_cli_refuses_reuse_out_dir_without_overwrite(tmp_path: Path):
+    args1 = [
+        "--count",
+        "1",
+        "--out-dir",
+        str(tmp_path),
+        "--seed",
+        "1",
+        "--template",
+        "layout_a",
+        "--dry-run",
+        "--log-level",
+        "ERROR",
+    ]
+    assert main(args1) == 0
+    assert (tmp_path / "manifest.jsonl").is_file()
+    code2 = main(args1)
+    assert code2 == 2
+    assert main(args1 + ["--overwrite"]) == 0
+
+
 def test_cli_deprecated_label_locale_writes_pl_metadata(tmp_path: Path):
     code = main(
         [
