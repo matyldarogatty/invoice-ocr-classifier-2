@@ -4,10 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import joblib
 import numpy as np
@@ -23,6 +22,14 @@ if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 from config import LABELS, NUM_CLASSES  # noqa: E402
+from experiment_prep import (  # noqa: E402
+    active_original_labels,
+    apply_exclude,
+    build_label_mappings,
+    downsample_train_label,
+    load_split_dataframe,
+    remap_labels_column,
+)
 from metrics_reporting import (  # noqa: E402
     compute_split_metrics,
     confusion_matrix_to_csv,
@@ -30,18 +37,14 @@ from metrics_reporting import (  # noqa: E402
 )
 
 
-def _load_xy(path: Path) -> Tuple[List[str], np.ndarray]:
-    d = pd.read_csv(path)
-    d.columns = [str(c).strip() for c in d.columns]
+def _df_to_xy(d: pd.DataFrame) -> Tuple[List[str], np.ndarray]:
     if "text" not in d.columns or "label" not in d.columns:
-        raise ValueError(f"{path} must have columns: text, label")
+        raise ValueError("DataFrame must have columns: text, label")
     if d["label"].isna().any():
-        raise ValueError(f"Empty labels in {path}")
-    d = d.copy()
-    d["text"] = d["text"].fillna("").astype(str)
-    y = d["label"].values.astype(int)
-    texts = d["text"].tolist()
-    return texts, y
+        raise ValueError("Empty labels")
+    dc = d.copy()
+    dc["text"] = dc["text"].fillna("").astype(str)
+    return dc["text"].tolist(), dc["label"].values.astype(int)
 
 
 def _build_pipeline(
@@ -81,6 +84,11 @@ def _build_pipeline(
     )
 
 
+def _to_original_labels(y: np.ndarray, train_to_orig: Dict[int, int]) -> np.ndarray:
+    y = np.asarray(y).ravel().astype(int)
+    return np.array([train_to_orig[int(i)] for i in y], dtype=int)
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description="TF-IDF + linear classifier for line text")
     p.add_argument("--train-csv", type=Path, required=True)
@@ -93,7 +101,7 @@ def main() -> int:
         default="logistic_regression",
         choices=("logistic_regression", "linear_svc"),
     )
-    p.add_argument("--max-features", type=int, default=None, help="TfidfVectorizer max_features (default: unbounded)")
+    p.add_argument("--max-features", type=int, default=None)
     p.add_argument("--ngram-min", type=int, default=1)
     p.add_argument("--ngram-max", type=int, default=2)
     p.add_argument("--seed", type=int, default=42)
@@ -102,25 +110,95 @@ def main() -> int:
         type=str,
         default="balanced",
         choices=("balanced", "none"),
-        help="sklearn class_weight: balanced or None (no reweighting).",
     )
+    p.add_argument(
+        "--exclude-labels",
+        type=int,
+        nargs="*",
+        default=None,
+        help="Original label ids to drop (e.g. 10 for CURRENCY).",
+    )
+    p.add_argument("--downsample-label", type=int, default=None)
+    p.add_argument("--downsample-ratio", type=float, default=None)
     args = p.parse_args()
+
+    if (args.downsample_label is not None) ^ (args.downsample_ratio is not None):
+        print(
+            "Error: provide both --downsample-label and --downsample-ratio, or neither.",
+            file=sys.stderr,
+        )
+        return 2
 
     for path in (args.train_csv, args.val_csv, args.test_csv):
         if not path.is_file():
             print(f"Missing file: {path}", file=sys.stderr)
             return 1
 
+    excluded = set(int(x) for x in (args.exclude_labels or []))
+    for lid in excluded:
+        if lid < 0 or lid >= NUM_CLASSES:
+            print(f"exclude label {lid} out of range 0..{NUM_CLASSES - 1}", file=sys.stderr)
+            return 2
+    if args.downsample_label is not None and int(args.downsample_label) in excluded:
+        print(
+            "Error: cannot downsample a label that is also excluded.",
+            file=sys.stderr,
+        )
+        return 2
+
+    train_df = load_split_dataframe(args.train_csv)
+    val_df = load_split_dataframe(args.val_csv)
+    test_df = load_split_dataframe(args.test_csv)
+    n_tr0, n_va0, n_te0 = len(train_df), len(val_df), len(test_df)
+
+    train_df, r_tr_e = apply_exclude(train_df, excluded)
+    val_df, r_va_e = apply_exclude(val_df, excluded)
+    test_df, r_te_e = apply_exclude(test_df, excluded)
+    if excluded:
+        print(
+            f"Excluded labels {sorted(excluded)}: removed rows — "
+            f"train {r_tr_e}/{n_tr0}, val {r_va_e}/{n_va0}, test {r_te_e}/{n_te0}"
+        )
+
+    if len(train_df) == 0 or len(val_df) == 0 or len(test_df) == 0:
+        print("Error: train, val, and test must be non-empty after exclusions.", file=sys.stderr)
+        return 2
+
+    down_summary: Dict[str, Any] = {"applied": False}
+    if args.downsample_label is not None:
+        train_df, down_summary = downsample_train_label(
+            train_df,
+            int(args.downsample_label),
+            float(args.downsample_ratio),
+            int(args.seed),
+        )
+        print(
+            f"Train downsampling: label={args.downsample_label}, ratio={args.downsample_ratio}, "
+            f"applied={down_summary.get('applied')}, rows_removed={down_summary.get('rows_removed', 0)}"
+        )
+        if len(train_df) == 0:
+            print("Error: training set empty after downsampling.", file=sys.stderr)
+            return 2
+
+    active_orig = active_original_labels(NUM_CLASSES, excluded)
+    if not active_orig:
+        print("Error: no active labels.", file=sys.stderr)
+        return 2
+    orig_to_train, train_to_orig = build_label_mappings(active_orig)
+    num_active = len(active_orig)
+
+    train_df_m = remap_labels_column(train_df, orig_to_train)
+    val_df_m = remap_labels_column(val_df, orig_to_train)
+    test_df_m = remap_labels_column(test_df, orig_to_train)
+
+    texts_tr, y_tr = _df_to_xy(train_df_m)
+    texts_va, y_va = _df_to_xy(val_df_m)
+    texts_te, y_te = _df_to_xy(test_df_m)
+
     cw = "balanced" if args.class_weight == "balanced" else None
     mf = args.max_features
     if mf is not None and mf <= 0:
         mf = None
-    texts_tr, y_tr = _load_xy(args.train_csv)
-    texts_va, y_va = _load_xy(args.val_csv)
-    texts_te, y_te = _load_xy(args.test_csv)
-    if len(texts_tr) == 0 or len(texts_va) == 0 or len(texts_te) == 0:
-        print("Error: train, val, and test must be non-empty.", file=sys.stderr)
-        return 2
 
     pipe = _build_pipeline(
         args.model,
@@ -133,30 +211,36 @@ def main() -> int:
     pipe.fit(texts_tr, y_tr)
     y_val_pred = pipe.predict(texts_va)
     y_test_pred = pipe.predict(texts_te)
-    report_labels = list(range(NUM_CLASSES))
+
+    y_va_o = _to_original_labels(y_va, train_to_orig)
+    y_te_o = _to_original_labels(y_te, train_to_orig)
+    y_val_po = _to_original_labels(y_val_pred, train_to_orig)
+    y_test_po = _to_original_labels(y_test_pred, train_to_orig)
+
+    report_labels = active_orig
     val_m = compute_split_metrics(
-        y_va, y_val_pred, num_classes=NUM_CLASSES, labels=report_labels
+        y_va_o, y_val_po, num_classes=num_active, labels=report_labels
     )
     test_m = compute_split_metrics(
-        y_te, y_test_pred, num_classes=NUM_CLASSES, labels=report_labels
+        y_te_o, y_test_po, num_classes=num_active, labels=report_labels
     )
     val_cm = confusion_matrix(
-        y_va, y_val_pred, labels=np.arange(NUM_CLASSES)
+        y_va_o, y_val_po, labels=np.array(report_labels)
     )
     test_cm = confusion_matrix(
-        y_te, y_test_pred, labels=np.arange(NUM_CLASSES)
+        y_te_o, y_test_po, labels=np.array(report_labels)
     )
     val_rep = classification_report(
-        y_va,
-        y_val_pred,
+        y_va_o,
+        y_val_po,
         labels=report_labels,
         target_names=[LABELS[i] for i in report_labels],
         output_dict=True,
         zero_division=0,
     )
     test_rep = classification_report(
-        y_te,
-        y_test_pred,
+        y_te_o,
+        y_test_po,
         labels=report_labels,
         target_names=[LABELS[i] for i in report_labels],
         output_dict=True,
@@ -180,11 +264,30 @@ def main() -> int:
         "seed": int(args.seed),
         "class_weight": args.class_weight,
         "missing_text_policy": "replace_with_empty_string",
-        "dropped_rows_train": 0,
-        "dropped_rows_val": 0,
-        "dropped_rows_test": 0,
+        "config_num_classes": NUM_CLASSES,
+        "active_original_labels": active_orig,
+        "excluded_label_ids": sorted(excluded),
+        "model_output_classes": num_active,
+        "rows_removed_by_exclude": {
+            "train": r_tr_e,
+            "val": r_va_e,
+            "test": r_te_e,
+        },
+        "train_downsampling": down_summary,
     }
     save_json(out / "config.json", config_payload)
+    save_json(
+        out / "label_mapping.json",
+        {
+            "active_original_labels": active_orig,
+            "excluded_labels": sorted(excluded),
+            "original_to_training": {str(k): v for k, v in orig_to_train.items()},
+            "training_to_original": {str(k): v for k, v in train_to_orig.items()},
+            "config_num_classes": NUM_CLASSES,
+        },
+    )
+    if down_summary.get("applied"):
+        save_json(out / "sampling_summary.json", down_summary)
     save_json(
         out / "metrics.json",
         {
@@ -192,13 +295,20 @@ def main() -> int:
             "input_type": "text_ocr",
             "val": val_m,
             "test": test_m,
+            "metrics_label_space": "original_ids_active_only",
+            "active_original_labels": active_orig,
         },
     )
     save_json(out / "classification_report_val.json", val_rep)
     save_json(out / "classification_report_test.json", test_rep)
-    confusion_matrix_to_csv(out / "confusion_matrix_val.csv", val_cm, label_names=LABELS)
     confusion_matrix_to_csv(
-        out / "confusion_matrix_test.csv", test_cm, label_names=LABELS
+        out / "confusion_matrix_val.csv", val_cm, label_names=LABELS, label_order=report_labels
+    )
+    confusion_matrix_to_csv(
+        out / "confusion_matrix_test.csv",
+        test_cm,
+        label_names=LABELS,
+        label_order=report_labels,
     )
     joblib.dump(pipe, out / "model.joblib")
     print("=== Val ===", val_m)

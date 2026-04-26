@@ -14,6 +14,14 @@ from sklearn.utils import class_weight as sk_class_weight
 from torch.utils.data import DataLoader, random_split
 
 from config import IMG_SIZE, LABELS, NUM_CLASSES
+from experiment_prep import (
+    active_original_labels,
+    apply_exclude,
+    build_label_mappings,
+    downsample_train_label,
+    load_split_dataframe,
+    remap_labels_column,
+)
 from invoice_dataset import InvoiceDataset
 from metrics_reporting import (
     compute_split_metrics,
@@ -72,13 +80,11 @@ def _validate_no_empty_labels(path: Path) -> None:
         raise ValueError(f"Empty label values in {path}")
 
 
-def _check_images(
-    paths: List[Path], images_dir: Path, limit_msg: int = 5
+def _check_images_from_frames(
+    frames: List[pd.DataFrame], images_dir: Path, limit_msg: int = 5
 ) -> None:
     missing: List[str] = []
-    for pth in paths:
-        d = pd.read_csv(pth)
-        d.columns = [str(c).strip() for c in d.columns]
+    for d in frames:
         for _, row in d.iterrows():
             fn = row["filename"]
             full = images_dir / str(fn)
@@ -93,19 +99,22 @@ def _check_images(
 
 
 def _build_class_weights(
-    train_csv: Path, num_classes: int, use_weights: bool, device: str
+    y_train: np.ndarray, num_active: int, use_weights: bool, device: str
 ) -> Optional[torch.Tensor]:
     if not use_weights:
         return None
-    d = pd.read_csv(train_csv)
-    d.columns = [str(c).strip() for c in d.columns]
-    y = d["label"].values.astype(int)
+    y = np.asarray(y_train).astype(int).ravel()
     unique = np.unique(y)
     cw = sk_class_weight.compute_class_weight("balanced", classes=unique, y=y)
-    w = np.ones(num_classes, dtype=np.float32)
+    w = np.ones(num_active, dtype=np.float32)
     for c, wgt in zip(unique, cw):
-        w[c] = wgt
+        w[int(c)] = wgt
     return torch.from_numpy(w).to(device)
+
+
+def _to_original_labels(y: np.ndarray, train_to_orig: Dict[int, int]) -> np.ndarray:
+    y = np.asarray(y).ravel().astype(int)
+    return np.array([train_to_orig[int(i)] for i in y], dtype=int)
 
 
 @torch.no_grad()
@@ -136,25 +145,82 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
     for p in (Path(args.train_csv), Path(args.val_csv), Path(args.test_csv)):
         _check_required_columns(p)
         _validate_no_empty_labels(p)
-    tds = len(pd.read_csv(args.train_csv))
-    vds = len(pd.read_csv(args.val_csv))
-    sds = len(pd.read_csv(args.test_csv))
-    if tds == 0 or vds == 0 or sds == 0:
-        raise ValueError("train, val, and test CSVs must be non-empty.")
-    _check_images(
-        [Path(args.train_csv), Path(args.val_csv), Path(args.test_csv)],
+
+    excluded = set(int(x) for x in (args.exclude_labels or []))
+    for lid in excluded:
+        if lid < 0 or lid >= NUM_CLASSES:
+            raise ValueError(
+                f"exclude label {lid} out of range 0..{NUM_CLASSES - 1}"
+            )
+
+    train_df = load_split_dataframe(args.train_csv)
+    val_df = load_split_dataframe(args.val_csv)
+    test_df = load_split_dataframe(args.test_csv)
+    n_tr0, n_va0, n_te0 = len(train_df), len(val_df), len(test_df)
+
+    train_df, r_tr_e = apply_exclude(train_df, excluded)
+    val_df, r_va_e = apply_exclude(val_df, excluded)
+    test_df, r_te_e = apply_exclude(test_df, excluded)
+    if excluded:
+        print(
+            f"Excluded labels {sorted(excluded)}: removed rows — "
+            f"train {r_tr_e}/{n_tr0}, val {r_va_e}/{n_va0}, test {r_te_e}/{n_te0}"
+        )
+
+    if len(train_df) == 0 or len(val_df) == 0 or len(test_df) == 0:
+        raise ValueError("After exclusions, train/val/test must be non-empty.")
+
+    down_summary: Dict[str, Any] = {"applied": False}
+    if getattr(args, "downsample_label", None) is not None:
+        dl = int(args.downsample_label)
+        if dl in excluded:
+            raise ValueError("Cannot --downsample-label a class that is also excluded.")
+        dr = float(args.downsample_ratio)
+        train_df, down_summary = downsample_train_label(
+            train_df, dl, dr, int(args.seed)
+        )
+        print(
+            f"Train downsampling: label={dl}, ratio={dr}, "
+            f"applied={down_summary.get('applied')}, rows_removed={down_summary.get('rows_removed', 0)}"
+        )
+        if len(train_df) == 0:
+            raise ValueError("Training set empty after downsampling.")
+
+    _check_images_from_frames(
+        [train_df, val_df, test_df],
         Path(args.images_dir),
     )
+
+    active_orig = active_original_labels(NUM_CLASSES, excluded)
+    if not active_orig:
+        raise ValueError("No active labels after exclusions.")
+    orig_to_train, train_to_orig = build_label_mappings(active_orig)
+    num_active = len(active_orig)
+
+    train_df_m = remap_labels_column(train_df, orig_to_train)
+    val_df_m = remap_labels_column(val_df, orig_to_train)
+    test_df_m = remap_labels_column(test_df, orig_to_train)
 
     _set_seed(int(args.seed))
     device = _device_from_arg(str(args.device))
 
     train_set = InvoiceDataset(
-        str(args.train_csv), str(args.images_dir), strict=True
+        csv_path=None,
+        images_dir=str(args.images_dir),
+        dataframe=train_df_m,
+        strict=True,
     )
-    val_set = InvoiceDataset(str(args.val_csv), str(args.images_dir), strict=True)
+    val_set = InvoiceDataset(
+        csv_path=None,
+        images_dir=str(args.images_dir),
+        dataframe=val_df_m,
+        strict=True,
+    )
     test_set = InvoiceDataset(
-        str(args.test_csv), str(args.images_dir), strict=True
+        csv_path=None,
+        images_dir=str(args.images_dir),
+        dataframe=test_df_m,
+        strict=True,
     )
 
     train_loader = DataLoader(
@@ -165,15 +231,16 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
         test_set, batch_size=int(args.batch_size), shuffle=False
     )
 
-    model = InvoiceCNN().to(device)
+    model = InvoiceCNN(num_classes=num_active).to(device)
     opt = torch.optim.Adam(
         model.parameters(), lr=float(args.learning_rate)
     )
+    y_tr = train_df_m["label"].values.astype(int)
     ce_weight = _build_class_weights(
-        Path(args.train_csv), NUM_CLASSES, bool(args.use_class_weights), device
+        y_tr, num_active, bool(args.use_class_weights), device
     )
     criterion = nn.CrossEntropyLoss(weight=ce_weight)
-    report_labels = list(range(NUM_CLASSES))
+    report_labels = active_orig
 
     for epoch in range(int(args.epochs)):
         model.train()
@@ -196,29 +263,34 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
     if y_val_t.size == 0 or y_test_t.size == 0:
         raise RuntimeError("Empty val or test predictions.")
 
+    y_val_t_o = _to_original_labels(y_val_t, train_to_orig)
+    y_val_p_o = _to_original_labels(y_val_p, train_to_orig)
+    y_test_t_o = _to_original_labels(y_test_t, train_to_orig)
+    y_test_p_o = _to_original_labels(y_test_p, train_to_orig)
+
     val_metrics = compute_split_metrics(
-        y_val_t, y_val_p, num_classes=NUM_CLASSES, labels=report_labels
+        y_val_t_o, y_val_p_o, num_classes=num_active, labels=report_labels
     )
     test_metrics = compute_split_metrics(
-        y_test_t, y_test_p, num_classes=NUM_CLASSES, labels=report_labels
+        y_test_t_o, y_test_p_o, num_classes=num_active, labels=report_labels
     )
     val_cm = confusion_matrix(
-        y_val_t, y_val_p, labels=np.arange(NUM_CLASSES)
+        y_val_t_o, y_val_p_o, labels=np.array(report_labels)
     )
     test_cm = confusion_matrix(
-        y_test_t, y_test_p, labels=np.arange(NUM_CLASSES)
+        y_test_t_o, y_test_p_o, labels=np.array(report_labels)
     )
     val_rep = classification_report(
-        y_val_t,
-        y_val_p,
+        y_val_t_o,
+        y_val_p_o,
         labels=report_labels,
         target_names=[LABELS[i] for i in report_labels],
         output_dict=True,
         zero_division=0,
     )
     test_rep = classification_report(
-        y_test_t,
-        y_test_p,
+        y_test_t_o,
+        y_test_p_o,
         labels=report_labels,
         target_names=[LABELS[i] for i in report_labels],
         output_dict=True,
@@ -240,9 +312,30 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
         "seed": int(args.seed),
         "device": device,
         "use_class_weights": bool(args.use_class_weights),
-        "num_classes": NUM_CLASSES,
+        "config_num_classes": NUM_CLASSES,
+        "active_original_labels": active_orig,
+        "excluded_label_ids": sorted(excluded),
+        "model_output_classes": num_active,
+        "rows_removed_by_exclude": {
+            "train": r_tr_e,
+            "val": r_va_e,
+            "test": r_te_e,
+        },
+        "train_downsampling": down_summary,
     }
     save_json(out / "config.json", config_payload)
+    save_json(
+        out / "label_mapping.json",
+        {
+            "active_original_labels": active_orig,
+            "excluded_labels": sorted(excluded),
+            "original_to_training": {str(k): v for k, v in orig_to_train.items()},
+            "training_to_original": {str(k): v for k, v in train_to_orig.items()},
+            "config_num_classes": NUM_CLASSES,
+        },
+    )
+    if down_summary.get("applied"):
+        save_json(out / "sampling_summary.json", down_summary)
     save_json(
         out / "metrics.json",
         {
@@ -250,13 +343,20 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
             "input_type": "image",
             "val": val_metrics,
             "test": test_metrics,
+            "metrics_label_space": "original_ids_active_only",
+            "active_original_labels": active_orig,
         },
     )
     save_json(out / "classification_report_val.json", val_rep)
     save_json(out / "classification_report_test.json", test_rep)
-    confusion_matrix_to_csv(out / "confusion_matrix_val.csv", val_cm, label_names=LABELS)
     confusion_matrix_to_csv(
-        out / "confusion_matrix_test.csv", test_cm, label_names=LABELS
+        out / "confusion_matrix_val.csv", val_cm, label_names=LABELS, label_order=report_labels
+    )
+    confusion_matrix_to_csv(
+        out / "confusion_matrix_test.csv",
+        test_cm,
+        label_names=LABELS,
+        label_order=report_labels,
     )
     torch.save(model.state_dict(), out / "model.pth")
 
@@ -339,6 +439,25 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Use balanced class weights from the training set for CrossEntropyLoss.",
     )
+    p.add_argument(
+        "--exclude-labels",
+        type=int,
+        nargs="*",
+        default=None,
+        help="Original label ids to drop from train/val/test in memory (e.g. 10 for CURRENCY).",
+    )
+    p.add_argument(
+        "--downsample-label",
+        type=int,
+        default=None,
+        help="Train only: cap this original label's count to ratio × max count of other labels.",
+    )
+    p.add_argument(
+        "--downsample-ratio",
+        type=float,
+        default=None,
+        help="Must be used with --downsample-label (e.g. 3.0).",
+    )
     return p
 
 
@@ -353,6 +472,12 @@ def main() -> int:
         print(
             "Error: provide --train-csv, --val-csv, --test-csv, --images-dir, and --output-dir, "
             "or use --legacy-80-20 for the previous single-CSV random split.",
+            file=sys.stderr,
+        )
+        return 2
+    if (args.downsample_label is not None) ^ (args.downsample_ratio is not None):
+        print(
+            "Error: provide both --downsample-label and --downsample-ratio, or neither.",
             file=sys.stderr,
         )
         return 2

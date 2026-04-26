@@ -63,20 +63,22 @@ def confusion_matrix_to_csv(
     path: Path,
     cm: np.ndarray,
     label_names: Optional[Dict[int, str]] = None,
+    label_order: Optional[List[int]] = None,
 ) -> None:
+    """
+    If label_order is set, row/column i corresponds to original label id label_order[i]
+    (for sklearn confusion_matrix(..., labels=label_order)).
+    Otherwise row/column i is treated as label id i (backward compatible).
+    """
     n = cm.shape[0]
+    names = label_names or {}
     col_names: List[str] = []
-    for i in range(n):
-        if label_names and i in label_names:
-            col_names.append(f"pred_{label_names[i]}")
-        else:
-            col_names.append(f"pred_{i}")
     row_names: List[str] = []
     for i in range(n):
-        if label_names and i in label_names:
-            row_names.append(f"true_{label_names[i]}")
-        else:
-            row_names.append(f"true_{i}")
+        oid = label_order[i] if label_order is not None else i
+        name = names.get(oid, str(oid))
+        col_names.append(f"pred_{name}")
+        row_names.append(f"true_{name}")
     df = pd.DataFrame(cm, index=row_names, columns=col_names)
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, encoding="utf-8")
