@@ -22,13 +22,14 @@ from experiment_prep import (
     load_split_dataframe,
     remap_labels_column,
 )
+from layout_features import active_layout_columns
 from invoice_dataset import InvoiceDataset
 from metrics_reporting import (
     compute_split_metrics,
     confusion_matrix_to_csv,
     save_json,
 )
-from model import InvoiceCNN
+from model import InvoiceCNN, InvoiceCNNWithLayout
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
@@ -117,17 +118,34 @@ def _to_original_labels(y: np.ndarray, train_to_orig: Dict[int, int]) -> np.ndar
     return np.array([train_to_orig[int(i)] for i in y], dtype=int)
 
 
+def _cnn_model_key(use_layout: bool, exclude_line_no: bool) -> str:
+    if not use_layout:
+        return "cnn"
+    if exclude_line_no:
+        return "cnn_layout_no_line_no"
+    return "cnn_layout"
+
+
 @torch.no_grad()
 def _predict_loader(
     loader: DataLoader,
     model: nn.Module,
     device: str,
+    use_layout: bool = False,
 ) -> Tuple[np.ndarray, np.ndarray]:
     model.eval()
     y_true, y_pred = [], []
-    for x, y in loader:
-        x, y = x.to(device), y.to(device)
-        logits = model(x)
+    for batch in loader:
+        if use_layout:
+            x, layout, y = batch
+            x = x.to(device)
+            layout = layout.to(device)
+            y = y.to(device)
+            logits = model(x, layout)
+        else:
+            x, y = batch
+            x, y = x.to(device), y.to(device)
+            logits = model(x)
         pred = logits.argmax(dim=1)
         y_true.append(y.cpu().numpy())
         y_pred.append(pred.cpu().numpy())
@@ -139,6 +157,12 @@ def _predict_loader(
 def _train_experiment_mode(args: argparse.Namespace) -> None:
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
+
+    use_layout = bool(getattr(args, "use_layout_features", False))
+    exclude_line_no = bool(getattr(args, "exclude_line_no_feature", False))
+    if exclude_line_no and not use_layout:
+        raise ValueError("--exclude-line-no-feature requires --use-layout-features")
+
     _check_paths_exist(
         Path(args.train_csv), Path(args.val_csv), Path(args.test_csv), Path(args.images_dir)
     )
@@ -204,24 +228,16 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
     _set_seed(int(args.seed))
     device = _device_from_arg(str(args.device))
 
-    train_set = InvoiceDataset(
-        csv_path=None,
-        images_dir=str(args.images_dir),
-        dataframe=train_df_m,
-        strict=True,
-    )
-    val_set = InvoiceDataset(
-        csv_path=None,
-        images_dir=str(args.images_dir),
-        dataframe=val_df_m,
-        strict=True,
-    )
-    test_set = InvoiceDataset(
-        csv_path=None,
-        images_dir=str(args.images_dir),
-        dataframe=test_df_m,
-        strict=True,
-    )
+    ds_kw = {
+        "csv_path": None,
+        "images_dir": str(args.images_dir),
+        "strict": True,
+        "use_layout_features": use_layout,
+        "exclude_line_no_feature": exclude_line_no,
+    }
+    train_set = InvoiceDataset(dataframe=train_df_m, **ds_kw)
+    val_set = InvoiceDataset(dataframe=val_df_m, **ds_kw)
+    test_set = InvoiceDataset(dataframe=test_df_m, **ds_kw)
 
     train_loader = DataLoader(
         train_set, batch_size=int(args.batch_size), shuffle=True
@@ -231,7 +247,20 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
         test_set, batch_size=int(args.batch_size), shuffle=False
     )
 
-    model = InvoiceCNN(num_classes=num_active).to(device)
+    layout_cols = active_layout_columns(exclude_line_no=exclude_line_no)
+    layout_dim = len(layout_cols)
+    line_no_used = use_layout and not exclude_line_no
+
+    if use_layout:
+        model = InvoiceCNNWithLayout(
+            num_classes=num_active,
+            layout_dim=layout_dim,
+        ).to(device)
+        model_name = "InvoiceCNNWithLayout"
+    else:
+        model = InvoiceCNN(num_classes=num_active).to(device)
+        model_name = "InvoiceCNN"
+    model_key = _cnn_model_key(use_layout, exclude_line_no)
     opt = torch.optim.Adam(
         model.parameters(), lr=float(args.learning_rate)
     )
@@ -245,10 +274,18 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
     for epoch in range(int(args.epochs)):
         model.train()
         total_loss = 0.0
-        for x, y in train_loader:
-            x, y = x.to(device), y.to(device)
+        for batch in train_loader:
+            if use_layout:
+                x, layout, y = batch
+                x = x.to(device)
+                layout = layout.to(device)
+                y = y.to(device)
+                out_logits = model(x, layout)
+            else:
+                x, y = batch
+                x, y = x.to(device), y.to(device)
+                out_logits = model(x)
             opt.zero_grad()
-            out_logits = model(x)
             loss = criterion(out_logits, y)
             loss.backward()
             opt.step()
@@ -258,8 +295,8 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
             f"Epoch {epoch + 1}/{int(args.epochs)} — train loss: {total_loss / n_batches:.4f}"
         )
 
-    y_val_t, y_val_p = _predict_loader(val_loader, model, device)
-    y_test_t, y_test_p = _predict_loader(test_loader, model, device)
+    y_val_t, y_val_p = _predict_loader(val_loader, model, device, use_layout=use_layout)
+    y_test_t, y_test_p = _predict_loader(test_loader, model, device, use_layout=use_layout)
     if y_val_t.size == 0 or y_test_t.size == 0:
         raise RuntimeError("Empty val or test predictions.")
 
@@ -297,9 +334,13 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
         zero_division=0,
     )
 
+    input_type = "image_crop+layout" if use_layout else "image"
     config_payload: Dict[str, Any] = {
-        "model_name": "InvoiceCNN",
-        "input_type": "image",
+        "model_name": model_name,
+        "model_key": model_key,
+        "input_type": input_type,
+        "layout_features_used": use_layout,
+        "line_no_feature_used": line_no_used,
         "input_shape": f"1x{IMG_SIZE}x{IMG_SIZE} (grayscale after transform)",
         "train_csv": str(Path(args.train_csv).resolve()),
         "val_csv": str(Path(args.val_csv).resolve()),
@@ -323,6 +364,9 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
         },
         "train_downsampling": down_summary,
     }
+    if use_layout:
+        config_payload["layout_feature_columns"] = layout_cols
+        config_payload["layout_dim"] = layout_dim
     save_json(out / "config.json", config_payload)
     save_json(
         out / "label_mapping.json",
@@ -339,8 +383,11 @@ def _train_experiment_mode(args: argparse.Namespace) -> None:
     save_json(
         out / "metrics.json",
         {
-            "model_name": "InvoiceCNN",
-            "input_type": "image",
+            "model_name": model_name,
+            "model_key": model_key,
+            "input_type": input_type,
+            "layout_features_used": use_layout,
+            "line_no_feature_used": line_no_used,
             "val": val_metrics,
             "test": test_metrics,
             "metrics_label_space": "original_ids_active_only",
@@ -458,6 +505,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Must be used with --downsample-label (e.g. 3.0).",
     )
+    p.add_argument(
+        "--use-layout-features",
+        action="store_true",
+        help="Use InvoiceCNNWithLayout with bbox/layout features from CSV.",
+    )
+    p.add_argument(
+        "--exclude-line-no-feature",
+        action="store_true",
+        help="When --use-layout-features is set, omit line_no_norm from layout input.",
+    )
     return p
 
 
@@ -478,6 +535,12 @@ def main() -> int:
     if (args.downsample_label is not None) ^ (args.downsample_ratio is not None):
         print(
             "Error: provide both --downsample-label and --downsample-ratio, or neither.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.exclude_line_no_feature and not args.use_layout_features:
+        print(
+            "Error: --exclude-line-no-feature requires --use-layout-features.",
             file=sys.stderr,
         )
         return 2

@@ -11,10 +11,12 @@ from typing import Any, Dict, List, Optional, Tuple
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
 _SRC = Path(__file__).resolve().parent
@@ -29,6 +31,11 @@ from experiment_prep import (  # noqa: E402
     downsample_train_label,
     load_split_dataframe,
     remap_labels_column,
+)
+from layout_features import (  # noqa: E402
+    LINE_NO_COLUMN,
+    active_layout_columns,
+    validate_layout_dataframe_columns,
 )
 from metrics_reporting import (  # noqa: E402
     compute_split_metrics,
@@ -47,6 +54,33 @@ def _df_to_xy(d: pd.DataFrame) -> Tuple[List[str], np.ndarray]:
     return dc["text"].tolist(), dc["label"].values.astype(int)
 
 
+def _prepare_text_frame(d: pd.DataFrame) -> pd.DataFrame:
+    out = d.copy()
+    out["text"] = out["text"].fillna("").astype(str)
+    return out
+
+
+def _prepare_layout_frame(d: pd.DataFrame, layout_cols: List[str]) -> pd.DataFrame:
+    validate_layout_dataframe_columns(d.columns, exclude_line_no=LINE_NO_COLUMN not in layout_cols)
+    out = _prepare_text_frame(d)
+    for col in layout_cols:
+        out[col] = pd.to_numeric(out[col], errors="raise")
+    return out
+
+
+def _model_key(
+    model: str,
+    use_layout: bool,
+    exclude_line_no: bool,
+) -> str:
+    base = "text_logreg" if model == "logistic_regression" else "text_svm"
+    if not use_layout:
+        return base
+    if exclude_line_no:
+        return f"{base}_layout_no_line_no"
+    return f"{base}_layout"
+
+
 def _build_pipeline(
     model: str,
     ngram_min: int,
@@ -54,6 +88,8 @@ def _build_pipeline(
     max_features: Optional[int],
     seed: int,
     class_weight: Optional[str],
+    use_layout: bool = False,
+    layout_cols: Optional[List[str]] = None,
 ) -> Pipeline:
     tfidf_kw: Dict[str, Any] = {
         "ngram_range": (ngram_min, ngram_max),
@@ -76,12 +112,51 @@ def _build_pipeline(
         )
     else:
         raise ValueError("model must be logistic_regression or linear_svc")
+
+    if not use_layout:
+        return Pipeline(
+            [
+                ("tfidf", TfidfVectorizer(**tfidf_kw)),
+                ("clf", clf),
+            ]
+        )
+
+    cols = layout_cols or active_layout_columns(exclude_line_no=False)
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("text", TfidfVectorizer(**tfidf_kw), "text"),
+            ("layout", StandardScaler(with_mean=False), cols),
+        ],
+        remainder="drop",
+    )
     return Pipeline(
         [
-            ("tfidf", TfidfVectorizer(**tfidf_kw)),
+            ("preprocess", preprocessor),
             ("clf", clf),
         ]
     )
+
+
+def _fit_predict(
+    pipe: Pipeline,
+    train_df: pd.DataFrame,
+    val_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    use_layout: bool,
+    layout_cols: List[str],
+) -> Tuple[np.ndarray, np.ndarray]:
+    if use_layout:
+        x_tr = _prepare_layout_frame(train_df, layout_cols)
+        x_va = _prepare_layout_frame(val_df, layout_cols)
+        x_te = _prepare_layout_frame(test_df, layout_cols)
+        y_tr = train_df["label"].values.astype(int)
+        pipe.fit(x_tr, y_tr)
+        return pipe.predict(x_va), pipe.predict(x_te)
+    texts_tr, y_tr = _df_to_xy(train_df)
+    texts_va, _ = _df_to_xy(val_df)
+    texts_te, _ = _df_to_xy(test_df)
+    pipe.fit(texts_tr, y_tr)
+    return pipe.predict(texts_va), pipe.predict(texts_te)
 
 
 def _to_original_labels(y: np.ndarray, train_to_orig: Dict[int, int]) -> np.ndarray:
@@ -120,7 +195,24 @@ def main() -> int:
     )
     p.add_argument("--downsample-label", type=int, default=None)
     p.add_argument("--downsample-ratio", type=float, default=None)
+    p.add_argument(
+        "--use-layout-features",
+        action="store_true",
+        help="Use bbox/layout numeric features together with TF-IDF text.",
+    )
+    p.add_argument(
+        "--exclude-line-no-feature",
+        action="store_true",
+        help="When --use-layout-features is set, omit line_no_norm from layout features.",
+    )
     args = p.parse_args()
+
+    if args.exclude_line_no_feature and not args.use_layout_features:
+        print(
+            "Error: --exclude-line-no-feature requires --use-layout-features.",
+            file=sys.stderr,
+        )
+        return 2
 
     if (args.downsample_label is not None) ^ (args.downsample_ratio is not None):
         print(
@@ -191,14 +283,16 @@ def main() -> int:
     val_df_m = remap_labels_column(val_df, orig_to_train)
     test_df_m = remap_labels_column(test_df, orig_to_train)
 
-    texts_tr, y_tr = _df_to_xy(train_df_m)
-    texts_va, y_va = _df_to_xy(val_df_m)
-    texts_te, y_te = _df_to_xy(test_df_m)
+    layout_cols = active_layout_columns(exclude_line_no=args.exclude_line_no_feature)
+    line_no_used = args.use_layout_features and not args.exclude_line_no_feature
 
     cw = "balanced" if args.class_weight == "balanced" else None
     mf = args.max_features
     if mf is not None and mf <= 0:
         mf = None
+
+    y_va = val_df_m["label"].values.astype(int)
+    y_te = test_df_m["label"].values.astype(int)
 
     pipe = _build_pipeline(
         args.model,
@@ -207,10 +301,17 @@ def main() -> int:
         mf,
         int(args.seed),
         cw,
+        use_layout=args.use_layout_features,
+        layout_cols=layout_cols if args.use_layout_features else None,
     )
-    pipe.fit(texts_tr, y_tr)
-    y_val_pred = pipe.predict(texts_va)
-    y_test_pred = pipe.predict(texts_te)
+    y_val_pred, y_test_pred = _fit_predict(
+        pipe,
+        train_df_m,
+        val_df_m,
+        test_df_m,
+        args.use_layout_features,
+        layout_cols,
+    )
 
     y_va_o = _to_original_labels(y_va, train_to_orig)
     y_te_o = _to_original_labels(y_te, train_to_orig)
@@ -251,9 +352,24 @@ def main() -> int:
     model_name = (
         f"Tfidf_{'LogReg' if args.model == 'logistic_regression' else 'LinearSVC'}"
     )
+    if args.use_layout_features:
+        model_name += "_Layout"
+        if args.exclude_line_no_feature:
+            model_name += "_NoLineNo"
+
+    input_type = "text_ocr+layout" if args.use_layout_features else "text_ocr"
+    model_key = _model_key(
+        args.model,
+        args.use_layout_features,
+        args.exclude_line_no_feature,
+    )
+
     config_payload: Dict[str, Any] = {
         "model_name": model_name,
-        "input_type": "text_ocr",
+        "model_key": model_key,
+        "input_type": input_type,
+        "layout_features_used": args.use_layout_features,
+        "line_no_feature_used": line_no_used,
         "train_csv": str(args.train_csv.resolve()),
         "val_csv": str(args.val_csv.resolve()),
         "test_csv": str(args.test_csv.resolve()),
@@ -275,6 +391,9 @@ def main() -> int:
         },
         "train_downsampling": down_summary,
     }
+    if args.use_layout_features:
+        config_payload["layout_feature_columns"] = layout_cols
+
     save_json(out / "config.json", config_payload)
     save_json(
         out / "label_mapping.json",
@@ -292,7 +411,10 @@ def main() -> int:
         out / "metrics.json",
         {
             "model_name": model_name,
-            "input_type": "text_ocr",
+            "model_key": model_key,
+            "input_type": input_type,
+            "layout_features_used": args.use_layout_features,
+            "line_no_feature_used": line_no_used,
             "val": val_m,
             "test": test_m,
             "metrics_label_space": "original_ids_active_only",

@@ -9,3 +9,15 @@ output/
 models/*.pth
 
 synthetic_invoice_generator/out/
+
+# Generated datasets and experiment outputs
+data/images_synthetic/
+data/labels_synthetic*.csv
+data/labels_synthetic*.json
+data/labels_synthetic*_review*.csv
+data/labels_synthetic*_summary.json
+synthetic_output/
+synthetic_invoice_generator/out_single/
+output/
+*.pth
+*.joblib

@@ -30,6 +30,12 @@ from doctr.io import DocumentFile  # noqa: E402
 from doctr.models import ocr_predictor  # noqa: E402
 from PIL import Image  # noqa: E402
 
+from layout_features import (  # noqa: E402
+    LAYOUT_FEATURE_COLUMNS,
+    compute_layout_features,
+    get_line_bbox_pixels,
+    validate_layout_features,
+)
 from match_utils import MatchDecision, build_caption_sets, match_ocr_line  # noqa: E402
 
 PROJECT_ROOT = _SRC.parent
@@ -39,20 +45,6 @@ OTHER_ID = SEMANTIC_TO_LABEL_ID["OTHER"]
 _CURRENCY_TOKEN_IN_TEXT = re.compile(
     r"(?i)(?:\bpln\b|\bzł\b|\bzl\b|\beur\b|\busd\b)"
 )
-
-
-def get_line_bbox_pixels(line, page) -> Tuple[int, int, int, int]:
-    xs, ys = [], []
-    for word in line.words:
-        (x1, y1), (x2, y2) = word.geometry
-        xs.extend([x1, x2])
-        ys.extend([y1, y2])
-    h, w = page.dimensions
-    x1 = int(min(xs) * w)
-    x2 = int(max(xs) * w)
-    y1 = int(min(ys) * h)
-    y2 = int(max(ys) * h)
-    return max(0, x1), max(0, y1), min(w, x2), min(h, y2)
 
 
 def _parse_manifest_line(line: str) -> Optional[Dict[str, Any]]:
@@ -209,70 +201,122 @@ def run_export(args: argparse.Namespace) -> int:
             continue
 
         consumed: Set[str] = set()
-        line_idx = 0
+        include_layout = bool(getattr(args, "include_layout_features", False))
+
+        valid_lines: List[Tuple[Any, str]] = []
         for block in page.blocks:
             for line in block.lines:
                 text = " ".join(w.value for w in line.words)
-                x1, y1, x2, y2 = get_line_bbox_pixels(line, page)
+                try:
+                    x1, y1, x2, y2 = get_line_bbox_pixels(line, page)
+                except ValueError:
+                    log.warning("Skipping line without geometry in %s", invoice_id)
+                    continue
                 if x2 - x1 < 10 or y2 - y1 < 10:
                     continue
+                valid_lines.append((line, text))
 
-                crop = page_image.crop((x1, y1, x2, y2))
-                filename = f"{invoice_id}_{line_idx:04d}.png"
-                crop.save(images_dir / filename)
+        total_lines = len(valid_lines)
+        line_idx = 0
+        for line, text in valid_lines:
+            x1, y1, x2, y2 = get_line_bbox_pixels(line, page)
 
-                decision = match_ocr_line(text, hints, consumed, caption_norms, caption_prefixes)
-                label_id, sem_name = _semantic_to_label(decision.semantic)
-                if decision.semantic:
-                    consumed.add(decision.semantic)
-                    stats["labeled_non_other"] += 1
-                else:
-                    stats["labeled_other"] += 1
-                    if decision.reason.startswith("ambiguous"):
-                        stats["ambiguous_matches"] += 1
+            layout_feats: Optional[Dict[str, float]] = None
+            if include_layout:
+                layout_feats = compute_layout_features(line, line_idx, total_lines)
+                if layout_feats is None:
+                    log.warning(
+                        "Skipping line %s in %s: could not compute layout features",
+                        line_idx,
+                        invoice_id,
+                    )
+                    continue
+                try:
+                    validate_layout_features(layout_feats)
+                except ValueError as e:
+                    log.warning(
+                        "Skipping line %s in %s: invalid layout features: %s",
+                        line_idx,
+                        invoice_id,
+                        e,
+                    )
+                    continue
 
-                stats["per_class_counts"][LABELS[label_id]] += 1
-                stats["ocr_lines_total"] += 1
+            crop = page_image.crop((x1, y1, x2, y2))
+            filename = f"{invoice_id}_{line_idx:04d}.png"
+            crop.save(images_dir / filename)
 
-                rows_out.append(
-                    {
-                        "filename": filename,
-                        "text": text,
-                        "label": label_id,
-                        "invoice_id": invoice_id,
-                        "semantic_name": sem_name,
-                    }
-                )
-                rev = {
-                    "invoice_id": invoice_id,
-                    "filename": filename,
-                    "text": text,
-                    "label": label_id,
-                    "semantic_name": sem_name,
-                    "matched_value": decision.matched_value,
-                    "match_type": decision.match_type,
-                    "reason": decision.reason,
-                }
-                review_rows.append(rev)
-                if bool(getattr(args, "write_diagnostics", False)) and _CURRENCY_TOKEN_IN_TEXT.search(
-                    text
-                ):
-                    diagnostic_rows.append(rev)
-                line_idx += 1
+            decision = match_ocr_line(text, hints, consumed, caption_norms, caption_prefixes)
+            label_id, sem_name = _semantic_to_label(decision.semantic)
+            if decision.semantic:
+                consumed.add(decision.semantic)
+                stats["labeled_non_other"] += 1
+            else:
+                stats["labeled_other"] += 1
+                if decision.reason.startswith("ambiguous"):
+                    stats["ambiguous_matches"] += 1
+
+            stats["per_class_counts"][LABELS[label_id]] += 1
+            stats["ocr_lines_total"] += 1
+
+            row: Dict[str, Any] = {
+                "filename": filename,
+                "text": text,
+                "label": label_id,
+                "invoice_id": invoice_id,
+                "semantic_name": sem_name,
+            }
+            if include_layout and layout_feats is not None:
+                row.update(layout_feats)
+            rows_out.append(row)
+
+            rev: Dict[str, Any] = {
+                "invoice_id": invoice_id,
+                "filename": filename,
+                "text": text,
+                "label": label_id,
+                "semantic_name": sem_name,
+                "matched_value": decision.matched_value,
+                "match_type": decision.match_type,
+                "reason": decision.reason,
+            }
+            if include_layout and layout_feats is not None:
+                rev.update(layout_feats)
+            review_rows.append(rev)
+            if bool(getattr(args, "write_diagnostics", False)) and _CURRENCY_TOKEN_IN_TEXT.search(
+                text
+            ):
+                diagnostic_rows.append(rev)
+            line_idx += 1
 
         stats["invoices_processed"] += 1
         processed += 1
         log.info("Exported invoice %s (%s OCR lines)", invoice_id, line_idx)
 
+    base_fieldnames = ["filename", "text", "label", "invoice_id", "semantic_name"]
+    include_layout = bool(getattr(args, "include_layout_features", False))
+    main_fieldnames = base_fieldnames + (LAYOUT_FEATURE_COLUMNS if include_layout else [])
+
     # Write main CSV
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(
-            f,
-            fieldnames=["filename", "text", "label", "invoice_id", "semantic_name"],
-        )
+        w = csv.DictWriter(f, fieldnames=main_fieldnames)
         w.writeheader()
         w.writerows(rows_out)
+
+    review_base_fieldnames = [
+        "invoice_id",
+        "filename",
+        "text",
+        "label",
+        "semantic_name",
+        "matched_value",
+        "match_type",
+        "reason",
+    ]
+    review_fieldnames = review_base_fieldnames + (
+        LAYOUT_FEATURE_COLUMNS if include_layout else []
+    )
 
     review_csv_path.parent.mkdir(parents=True, exist_ok=True)
     review_write = review_rows
@@ -284,38 +328,14 @@ def run_export(args: argparse.Namespace) -> int:
             review_csv_path.stem + "_sample" + review_csv_path.suffix
         )
         with sample_path.open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(
-                f,
-                fieldnames=[
-                    "invoice_id",
-                    "filename",
-                    "text",
-                    "label",
-                    "semantic_name",
-                    "matched_value",
-                    "match_type",
-                    "reason",
-                ],
-            )
+            w = csv.DictWriter(f, fieldnames=review_fieldnames)
             w.writeheader()
             w.writerows(review_write)
         log.info("Wrote review sample (%s rows) to %s", len(review_write), sample_path)
         review_write = review_rows
 
     with review_csv_path.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(
-            f,
-            fieldnames=[
-                "invoice_id",
-                "filename",
-                "text",
-                "label",
-                "semantic_name",
-                "matched_value",
-                "match_type",
-                "reason",
-            ],
-        )
+        w = csv.DictWriter(f, fieldnames=review_fieldnames)
         w.writeheader()
         w.writerows(review_write)
 
@@ -451,7 +471,25 @@ def main() -> int:
         default="",
         help="Destination for currency diagnostics (default: currency_candidate_lines.csv next to --csv-path).",
     )
+    p.add_argument(
+        "--include-layout-features",
+        action="store_true",
+        help="Append normalized bbox/layout columns to CSV output.",
+    )
     args = p.parse_args()
+    if args.include_layout_features:
+        default_layout_csv = str(PROJECT_ROOT / "data" / "labels_synthetic_with_layout.csv")
+        default_layout_review = str(
+            PROJECT_ROOT / "data" / "labels_synthetic_with_layout_review.csv"
+        )
+        if args.csv_path == str(PROJECT_ROOT / "data" / "labels_synthetic.csv"):
+            args.csv_path = default_layout_csv
+        if args.review_csv_path == str(PROJECT_ROOT / "data" / "labels_synthetic_review.csv"):
+            args.review_csv_path = default_layout_review
+        if args.summary_json_path == str(PROJECT_ROOT / "data" / "labels_synthetic_summary.json"):
+            args.summary_json_path = str(
+                PROJECT_ROOT / "data" / "labels_synthetic_with_layout_summary.json"
+            )
     if args.limit == 0:
         args.limit = None
     if args.no_summary_json:
