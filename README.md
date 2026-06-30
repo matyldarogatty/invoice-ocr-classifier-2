@@ -17,14 +17,14 @@ z wykorzystaniem PyTorch.
 
 ## Eksport zbioru z faktur syntetycznych (PDF + JSON → crops + CSV)
 
-Po wygenerowaniu plików w `synthetic_invoice_generator/out/` możesz zbudować **osobny** zbiór (bez nadpisywania `data/labels.csv` ani `data/images/`):
+Po wygenerowaniu plików w `synthetic_invoice_generator/out/` można zbudować **osobny** zbiór (bez nadpisywania `data/labels.csv` ani `data/images/`):
 
 ```bash
 cd AI_OCR
 python src/export_synthetic_to_labels.py --limit 0 --log-level INFO
 ```
 
-Domyślne wyjścia: `data/images_synthetic/`, `data/labels_synthetic.csv`, `data/labels_synthetic_review.csv`, `data/labels_synthetic_summary.json`. Przed treningiem **przejrzyj** plik review (dopasowanie OCR ↔ JSON jest konserwatywne).
+Domyślne wyjścia: `data/images_synthetic/`, `data/labels_synthetic.csv`, `data/labels_synthetic_review.csv`, `data/labels_synthetic_summary.json`.
 
 ## Uruchomienie inference
 ```bash
